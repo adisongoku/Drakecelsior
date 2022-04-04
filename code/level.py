@@ -4,6 +4,7 @@ from tile import Tile
 from player import Player
 from debug import debug
 from support import *
+from random import choice
 
 class Level:
     def __init__(self):
@@ -19,11 +20,18 @@ class Level:
 
     def create_map(self):
 
-        layout = {
-                "boundary" : import_csv_layout("../map/map_FloorBlocks_borders.csv")
+        layouts = {
+                "boundary" : import_csv_layout("../map/level_1_boundaries.csv"),
+                "clutter": import_csv_layout("../map/level_1_clutter.csv"),
+                "objects": import_csv_layout("../map/level_1_objects.csv")
         }
 
-        for style,layout in layout.items():
+        graphics = {
+                "clutter": import_folder("../graphics/clutter"),
+                "objects": import_folder("../graphics/objects")
+        }
+
+        for style,layout in layouts.items():
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
                     if col != "-1":
@@ -31,12 +39,19 @@ class Level:
                         y = row_index * TILESIZE
                         if style == "boundary":
                             Tile((x,y),[self.obstacles_sprites], "invisible", surface = pygame.Surface((TILESIZE,TILESIZE)))
+                        if style == "clutter":
+                            random_clutter_image = choice(graphics["clutter"])
+                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"clutter",random_clutter_image)
+                        if style == "objects":
+                            surf = graphics["objects"][int(col)]
+                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"objects",surf)
+
         #         if col == "x":
         #             Tile((x,y),[self.visible_sprites,self.obstacles_sprites]) #creates an instance of Tile class passing the position and list with sprites 
         #         if col == "p":
         #             self.player = Player((x,y),[self.visible_sprites],self.obstacles_sprites) #here we create a plater and pass to it its position along with putting the player into the list of visible sprites, then we pass the list of obstacle sprites INTO the player class but the player is not into obstacle sprites itslef
         
-        self.player = Player((300,500),[self.visible_sprites],self.obstacles_sprites)
+        self.player = Player((60,1130),[self.visible_sprites],self.obstacles_sprites)
 
     def run(self):
         #update and draw the game
@@ -54,7 +69,7 @@ class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting spr
         self.offset = pygame.math.Vector2() 
 
         #creating the floor
-        self.floor_surf = pygame.image.load("../graphics/tilemap/ground.png").convert()
+        self.floor_surf = pygame.image.load("../graphics/tilemap/level_1.png").convert()
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
     def custom_draw(self, player):
