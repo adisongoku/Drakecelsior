@@ -5,18 +5,25 @@ from player import Player
 from debug import debug
 from support import *
 from random import choice
+from ui import UI
 
 class Level:
-    def __init__(self):
+    def __init__(self, change_coins):
         #get the sicplay surface
         self.display_surface = pygame.display.get_surface()
 
         #sprite group setup
         self.visible_sprites = YsortCameraGroup() #replacing default pygame sprite group with our custom one, to create a functional camera
         self.obstacles_sprites = pygame.sprite.Group()
+        self.collectible_sprites = pygame.sprite.Group()
         
         #sprite setup
         self.create_map()
+
+        #ui
+        self.ui = UI(self.display_surface)
+        self.change_coins = change_coins
+   
 
     def create_map(self):
 
@@ -32,6 +39,8 @@ class Level:
                 "objects": import_folder("../graphics/objects"),
                 "coin": import_folder("../graphics/coin")
         }
+
+        
 
         for style,layout in layouts.items():
             for row_index, row in enumerate(layout):
@@ -49,7 +58,7 @@ class Level:
                             Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"objects",surf)
                         if style == "coins":
                             surf = graphics["coin"][int(col)]
-                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"coin",surf)
+                            Tile((x,y),[self.visible_sprites, self.collectible_sprites],"coin",surf)
 
         #         if col == "x":
         #             Tile((x,y),[self.visible_sprites,self.obstacles_sprites]) #creates an instance of Tile class passing the position and list with sprites 
@@ -57,10 +66,20 @@ class Level:
         #             self.player = Player((x,y),[self.visible_sprites],self.obstacles_sprites) #here we create a plater and pass to it its position along with putting the player into the list of visible sprites, then we pass the list of obstacle sprites INTO the player class but the player is not into obstacle sprites itslef
         
         self.player = Player((60,1130),[self.visible_sprites],self.obstacles_sprites)
+        
+    def check_coin_collisons(self):
+        collided_coins = pygame.sprite.spritecollide(self.player, self.collectible_sprites, True)
+        if collided_coins:
+            for coin in collided_coins:
+                self.change_coins(1)
+
+
+
 
     def run(self):
         #update and draw the game
         self.visible_sprites.custom_draw(self.player)
+        self.check_coin_collisons()
         self.visible_sprites.update()
 
 class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting sprites by Y coordinate and thanks to that we're going to give them some overlap

@@ -1,7 +1,9 @@
+from turtle import screensize
 import pygame,sys
 from settings import * #the star makes it to import everything from settings
 #from debug import debug
 from level import Level
+from ui import UI
 
 class Game:
     def __init__(self):
@@ -12,7 +14,17 @@ class Game:
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Drakcelsior")
 
-        self.level = Level()
+        #ui
+        self.ui = UI(self.screen)
+
+
+        self.coins = 0
+        self.level = Level(self.change_coins)
+
+    def change_coins(self, amount):
+        self.coins += amount
+
+
 
     def run(self):
         while True:
@@ -23,6 +35,7 @@ class Game:
 
             self.screen.fill("black")
             self.level.run()
+            self.ui.show_coins(0)
             pygame.display.update()
             self.clock.tick(FPS)
 
