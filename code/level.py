@@ -23,12 +23,14 @@ class Level:
         layouts = {
                 "boundary" : import_csv_layout("../map/level_1_boundaries.csv"),
                 "clutter": import_csv_layout("../map/level_1_clutter.csv"),
-                "objects": import_csv_layout("../map/level_1_objects.csv")
+                "objects": import_csv_layout("../map/level_1_objects.csv"),
+                "coins": import_csv_layout("../map/level_1_coin.csv")
         }
 
         graphics = {
                 "clutter": import_folder("../graphics/clutter"),
-                "objects": import_folder("../graphics/objects")
+                "objects": import_folder("../graphics/objects"),
+                "coin": import_folder("../graphics/coin")
         }
 
         for style,layout in layouts.items():
@@ -45,6 +47,9 @@ class Level:
                         if style == "objects":
                             surf = graphics["objects"][int(col)]
                             Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"objects",surf)
+                        if style == "coins":
+                            surf = graphics["coin"][int(col)]
+                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"coin",surf)
 
         #         if col == "x":
         #             Tile((x,y),[self.visible_sprites,self.obstacles_sprites]) #creates an instance of Tile class passing the position and list with sprites 
