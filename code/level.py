@@ -31,14 +31,14 @@ class Level:
                 "boundary" : import_csv_layout("../map/level_1_boundaries.csv"),
                 "clutter": import_csv_layout("../map/level_1_clutter.csv"),
                 "objects": import_csv_layout("../map/level_1_objects.csv"),
-                "coins": import_csv_layout("../map/level_1_coin.csv"),
+                "collectibles": import_csv_layout("../map/level_1_collectibles.csv"),
                 "walls": import_csv_layout("../map/level_1_walls.csv")
         }
 
         graphics = {
                 "clutter": import_folder("../graphics/clutter"),
                 "objects": import_folder("../graphics/objects"),
-                "coin": import_folder("../graphics/coin"),
+                "collectibles": import_folder("../graphics/collectibles"),
                 "walls": import_folder("../graphics/walls")
         }
 
@@ -61,9 +61,9 @@ class Level:
                         if style == "walls":
                             surf = graphics["walls"][int(col)]
                             Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"walls",surf)
-                        if style == "coins":
-                            surf = graphics["coin"][int(col)]
-                            Tile((x,y),[self.visible_sprites, self.collectible_sprites],"coin",surf)
+                        if style == "collectibles":
+                            surf = graphics["collectibles"][int(col)]
+                            Tile((x,y),[self.visible_sprites, self.collectible_sprites],"collectibles",surf)
 
         self.player = Player((60,1130),[self.visible_sprites],self.obstacles_sprites)
         
@@ -72,9 +72,6 @@ class Level:
         if collided_coins:
             for coin in collided_coins:
                 self.change_coins(1)
-
-
-
 
     def run(self):
         #update and draw the game

@@ -8,7 +8,7 @@ class UI:
         self.display_surface = surface
 
         #coins
-        self.coin = pygame.image.load('../graphics/coin/coin.png')
+        self.coin = pygame.image.load('../graphics/collectibles/1.png')
         self.coin_rect = self.coin.get_rect(topleft = (50, 61))
         self.font = pygame.font.Font('../graphics/ui/Minecraft.ttf', 30)
 

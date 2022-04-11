@@ -35,7 +35,7 @@ class Game:
 
             self.screen.fill("black")
             self.level.run()
-            self.ui.show_coins(0)
+            self.ui.show_coins(self.coins)
             pygame.display.update()
             self.clock.tick(FPS)
 
