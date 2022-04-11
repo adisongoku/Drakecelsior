@@ -1,6 +1,7 @@
 import pygame
 import sys
 from settings import *
+from debug import debug
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites):
