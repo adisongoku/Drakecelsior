@@ -27,44 +27,44 @@ class Level:
 
     def create_map(self):
 
-        layouts = {
+        level_1 = {
                 "boundary" : import_csv_layout("../map/level_1_boundaries.csv"),
                 "clutter": import_csv_layout("../map/level_1_clutter.csv"),
                 "objects": import_csv_layout("../map/level_1_objects.csv"),
-                "coins": import_csv_layout("../map/level_1_coin.csv")
+                "coins": import_csv_layout("../map/level_1_coin.csv"),
+                "walls": import_csv_layout("../map/level_1_walls.csv")
         }
 
         graphics = {
                 "clutter": import_folder("../graphics/clutter"),
                 "objects": import_folder("../graphics/objects"),
-                "coin": import_folder("../graphics/coin")
+                "coin": import_folder("../graphics/coin"),
+                "walls": import_folder("../graphics/walls")
         }
 
         
 
-        for style,layout in layouts.items():
+        for style,layout in level_1.items():
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
                     if col != "-1":
                         x = col_index * TILESIZE
                         y = row_index * TILESIZE
                         if style == "boundary":
-                            Tile((x,y),[self.obstacles_sprites], "invisible", surface = pygame.Surface((TILESIZE,TILESIZE)))
+                            Tile((x,y),[self.obstacles_sprites], "boundary", surface = pygame.Surface((TILESIZE,TILESIZE)))
                         if style == "clutter":
                             random_clutter_image = choice(graphics["clutter"])
-                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"clutter",random_clutter_image)
+                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"clutter",random_clutter_image) #creates an instance of Tile class passing the position and list with sprites 
                         if style == "objects":
                             surf = graphics["objects"][int(col)]
                             Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"objects",surf)
+                        if style == "walls":
+                            surf = graphics["walls"][int(col)]
+                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"walls",surf)
                         if style == "coins":
                             surf = graphics["coin"][int(col)]
                             Tile((x,y),[self.visible_sprites, self.collectible_sprites],"coin",surf)
 
-        #         if col == "x":
-        #             Tile((x,y),[self.visible_sprites,self.obstacles_sprites]) #creates an instance of Tile class passing the position and list with sprites 
-        #         if col == "p":
-        #             self.player = Player((x,y),[self.visible_sprites],self.obstacles_sprites) #here we create a plater and pass to it its position along with putting the player into the list of visible sprites, then we pass the list of obstacle sprites INTO the player class but the player is not into obstacle sprites itslef
-        
         self.player = Player((60,1130),[self.visible_sprites],self.obstacles_sprites)
         
     def check_coin_collisons(self):
@@ -93,7 +93,7 @@ class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting spr
         self.offset = pygame.math.Vector2() 
 
         #creating the floor
-        self.floor_surf = pygame.image.load("../graphics/tilemap/level_1.png").convert()
+        self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
     def custom_draw(self, player):

@@ -1,6 +1,7 @@
 from csv import reader
 from os import walk #walk lets you to go through file system
 import pygame
+import re
 
 def import_csv_layout(path):
     terrain_map = []
@@ -12,13 +13,19 @@ def import_csv_layout(path):
 
 #print(import_csv_layout("../map/map_FloorBlocks.csv"))
 
+def atoi(text):
+    return int(text) if text.isdigit() else text
+
+def natural_keys(text):
+    return [ atoi(c) for c in re.split(r'(\d+)', text) ]
+
 def import_folder(path):
     surface_list = []
 
     for _,__,img_files in walk(path):
-        for image in img_files:
+        for image in sorted(img_files, key=natural_keys):
+            print(image)
             full_path = path + '/' + image
-            print(full_path)
             image_surf = pygame.image.load(full_path).convert_alpha()
             surface_list.append(image_surf)
 

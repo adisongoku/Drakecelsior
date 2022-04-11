@@ -1,7 +1,7 @@
 from turtle import screensize
 import pygame,sys
 from settings import * #the star makes it to import everything from settings
-#from debug import debug
+from debug import debug
 from level import Level
 from ui import UI
 
