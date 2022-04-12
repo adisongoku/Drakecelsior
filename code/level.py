@@ -23,6 +23,7 @@ class Level:
         self.obstacles_sprites = pygame.sprite.Group()
         self.collectible_sprites = pygame.sprite.Group()
         self.special_sprites = pygame.sprite.Group()
+        self.shadow_sprites = YsortCameraShadowGroup()
         
         #sprite setup
         self.create_map()
@@ -40,21 +41,24 @@ class Level:
                 "objects": import_csv_layout("../map/level_1_objects.csv"),
                 "collectibles": import_csv_layout("../map/level_1_collectibles.csv"),
                 "walls": import_csv_layout("../map/level_1_walls.csv"),
-                "special_tiles": import_csv_layout("../map/level_1_special_tiles.csv")
+                "special_tiles": import_csv_layout("../map/level_1_special_tiles.csv"),
+                "shadows": import_csv_layout("../map/level_1_shadows.csv")
         }
 
         level_2 = {
                 "clutter": import_csv_layout("../map/level_2_clutter.csv"),
                 "collectibles": import_csv_layout("../map/level_2_collectibles.csv"),
                 "walls": import_csv_layout("../map/level_2_walls.csv"),
-                "special_tiles": import_csv_layout("../map/level_2_special_tiles.csv")
+                "special_tiles": import_csv_layout("../map/level_2_special_tiles.csv"),
+                "shadows": import_csv_layout("../map/level_2_shadows.csv")
         }
 
         graphics = {
                 "clutter": import_folder("../graphics/clutter"),
                 "objects": import_folder("../graphics/objects"),
                 "collectibles": import_folder("../graphics/collectibles"),
-                "walls": import_folder("../graphics/walls")
+                "walls": import_folder("../graphics/walls"),
+                "shadows": import_folder("../graphics/shadows")
         }
 
         levels = [level_1,level_2]
@@ -82,6 +86,9 @@ class Level:
                             Tile((x,y),[self.visible_sprites, self.collectible_sprites],"collectibles",surf)
                         if style == "special_tiles":
                             Tile((x,y),[self.special_sprites],"special",surf)
+                        if style == "shadows":
+                            surf = graphics["shadows"][int(col) - 1]
+                            Tile((x,y),[self.shadow_sprites],"shadows",surf)
 
         self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites)
 
@@ -89,6 +96,7 @@ class Level:
     def update_map(self):
         self.special_sprites.empty()
         self.visible_sprites.empty()
+        self.shadow_sprites.empty()
         self.collectible_sprites.empty()
         self.obstacles_sprites.empty()
         self.create_map()
@@ -129,9 +137,12 @@ class Level:
     def run(self):
         #update and draw the game
         self.visible_sprites.custom_draw(self.player, self.floor_surf, self.floor_rect)
+        self.shadow_sprites.shadow_draw(self.player)
         self.check_coin_collisons()
         self.check_special_collisions()
-        self.visible_sprites.update()    
+        self.visible_sprites.update()   
+        self.shadow_sprites.update() 
+
 
 class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting sprites by Y coordinate and thanks to that we're going to give them some overlap
     def __init__(self):
@@ -142,10 +153,6 @@ class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting spr
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2() 
-
-        #creating the floor
-        # self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
-        # self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
     def custom_draw(self, player, floor_surf, floor_rect):
 
@@ -159,5 +166,23 @@ class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting spr
 
         #for sprite in self.sprites():
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery): #CENTER Y!
+            offset_rect = sprite.rect.topleft - self.offset
+            self.display_surface.blit(sprite.image, offset_rect)
+
+class YsortCameraShadowGroup(pygame.sprite.Group): 
+    def __init__(self):
+
+        super().__init__()    
+        self.display_surface = pygame.display.get_surface()
+        self.half_width = self.display_surface.get_size()[0] // 2
+        self.half_height = self.display_surface.get_size()[1] // 2
+        self.offset = pygame.math.Vector2() 
+
+    def shadow_draw(self, player):
+
+        self.offset.x = player.rect.centerx - self.half_width
+        self.offset.y = player.rect.centery - self.half_height
+
+        for sprite in self.sprites(): #CENTER Y!
             offset_rect = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_rect)

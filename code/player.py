@@ -21,7 +21,6 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
-
         #movement
         if keys[pygame.K_UP]:
             self.direction.y = -1
