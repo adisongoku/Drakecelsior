@@ -142,6 +142,8 @@ class Level:
         self.check_special_collisions()
         self.visible_sprites.update()   
         self.shadow_sprites.update() 
+        debug(self.player.status)
+        
 
 
 class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting sprites by Y coordinate and thanks to that we're going to give them some overlap

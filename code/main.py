@@ -10,7 +10,7 @@ class Game:
         
         #general setup
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
+        self.screen = pygame.display.set_mode((800,600))
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Drakcelsior")
 
@@ -44,6 +44,4 @@ if __name__ == "__main__":
     game.run()
 
 
-
-    #https://youtu.be/wJMDh9QGRgs Tiled
-    #7h one at 1:56:00
+    #7h one at 2:30:00 weapons
