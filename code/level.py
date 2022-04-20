@@ -116,7 +116,7 @@ class Level:
         if(collided):
             if self.level_index == 0:
                 self.level_index += 1
-                self.player_pos = (1202,2307)
+                self.player_pos = (1202,2207)
                 self.floor_surf = pygame.image.load("../graphics/tilemap/level2_ground.png").convert()
                 floor_width = self.floor_surf.get_width() * 2
                 floor_height = self.floor_surf.get_height() * 2

@@ -14,12 +14,11 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(-20,-60)
         
-
         #graphics setup
         self.import_player_assets()
         self.status = "down"
         self.frame_index = 0
-        self.animation_speed = 0.15
+        self.animation_speed = 0.1
 
         #movement
         self.direction = pygame.math.Vector2() #this gives us a vector that has x and y and by default they're both 0
@@ -148,7 +147,7 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
         
         #set the image
-        if self.status == "right_idle" or self.status == "left_idle":
+        if self.status == "right_idle" or self.status == "left_idle" or self.status == "up_idle" or self.status == "down_idle" or self.status == "left" or self.status == "right":
             self.image = animation[int(self.frame_index)]
             self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
             self.rect = self.image.get_rect(center = self.hitbox.center)
