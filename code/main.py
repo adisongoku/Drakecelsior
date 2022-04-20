@@ -10,7 +10,7 @@ class Game:
         
         #general setup
         pygame.init()
-        self.screen = pygame.display.set_mode((800,600))
+        self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Drakcelsior")
 

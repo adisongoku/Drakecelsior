@@ -11,11 +11,14 @@ class Level:
     def __init__(self, change_coins):
         #get the display surface
         self.display_surface = pygame.display.get_surface()
-
         #level information
         self.level_index = 0
-        self.player_pos = (60,1130)
+        self.player_pos = (193,2363)
         self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
+        floor_width = self.floor_surf.get_width() * 2
+        floor_height = self.floor_surf.get_height() * 2
+        self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
         #sprite group setup
@@ -113,13 +116,19 @@ class Level:
         if(collided):
             if self.level_index == 0:
                 self.level_index += 1
-                self.player_pos = (636,1000)
+                self.player_pos = (1202,2307)
                 self.floor_surf = pygame.image.load("../graphics/tilemap/level2_ground.png").convert()
+                floor_width = self.floor_surf.get_width() * 2
+                floor_height = self.floor_surf.get_height() * 2
+                self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
                 self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
             else:
                 self.level_index -= 1
-                self.player_pos = (1903,154)
+                self.player_pos = (3758,219)
                 self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
+                floor_width = self.floor_surf.get_width() * 2
+                floor_height = self.floor_surf.get_height() * 2
+                self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
                 self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
             self.fade()
             self.update_map()
@@ -142,7 +151,7 @@ class Level:
         self.check_special_collisions()
         self.visible_sprites.update()   
         self.shadow_sprites.update() 
-        debug(self.player.status)
+        debug(self.player.rect.topleft)
         
 
 
