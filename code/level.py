@@ -6,6 +6,7 @@ from debug import debug
 from support import *
 from random import choice
 from ui import UI
+from weapon import Weapon
 
 class Level:
     def __init__(self, change_coins):
@@ -28,8 +29,16 @@ class Level:
         self.special_sprites = pygame.sprite.Group()
         self.shadow_sprites = YsortCameraShadowGroup()
         
+        # attack sprites 
+        self.current_attack = None
+
+        # coin sprites 
+        self.collided_coins = None
+
         #sprite setup
         self.create_map()
+
+       
 
         #ui
         self.ui = UI(self.display_surface)
@@ -93,7 +102,16 @@ class Level:
                             surf = graphics["shadows"][int(col) - 1]
                             Tile((x,y),[self.shadow_sprites],"shadows",surf)
 
-        self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites)
+        self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack)
+
+    def create_attack(self):
+        self.current_attack = Weapon(self.player, [self.visible_sprites])
+
+    def destroy_attack(self):
+        if self.current_attack:
+            self.current_attack.kill()
+        self.current_attack = None
+        
 
     #empty all sprite groups and refill them with new set of sprites from the other level
     def update_map(self):
@@ -109,6 +127,11 @@ class Level:
         if collided_coins:
             for coin in collided_coins:
                 self.change_coins(1)
+            
+
+    
+        
+
 
     #check for a collision with a tile responisble for level transition
     def check_special_collisions(self):
