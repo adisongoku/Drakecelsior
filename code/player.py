@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
 
             #sprint
             if keys[pygame.K_LSHIFT]:
-                self.speed = 10
+                self.speed = 30
             else:
                 self.speed = 5
 
