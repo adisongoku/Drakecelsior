@@ -28,22 +28,22 @@ class Level:
         self.collectible_sprites = pygame.sprite.Group()
         self.special_sprites = pygame.sprite.Group()
         self.shadow_sprites = YsortCameraShadowGroup()
-        
-        # attack sprites 
+
+        # attack sprites
         self.current_attack = None
 
-        # coin sprites 
+        # coin sprites
         self.collided_coins = None
 
         #sprite setup
         self.create_map()
 
-       
+
 
         #ui
         self.ui = UI(self.display_surface)
         self.change_coins = change_coins
-   
+
 
     def create_map(self):
 
@@ -65,6 +65,13 @@ class Level:
                 "shadows": import_csv_layout("../map/level_2_shadows.csv")
         }
 
+        level_3 = {
+                "collectibles": import_csv_layout("../map/level3__collectibles.csv"),
+                "walls": import_csv_layout("../map/level3__walls.csv"),
+                "special_tiles": import_csv_layout("../map/level3__special_tiles.csv"),
+                "shadows": import_csv_layout("../map/level3__shadows.csv")
+        }
+
         graphics = {
                 "clutter": import_folder("../graphics/clutter"),
                 "objects": import_folder("../graphics/objects"),
@@ -73,8 +80,8 @@ class Level:
                 "shadows": import_folder("../graphics/shadows")
         }
 
-        levels = [level_1,level_2]
-        
+        levels = [level_1,level_2,level_3]
+
 
         for style,layout in levels[self.level_index].items():
             for row_index, row in enumerate(layout):
@@ -86,7 +93,7 @@ class Level:
                             Tile((x,y),[self.obstacles_sprites], "boundary", surface = pygame.Surface((TILESIZE,TILESIZE)))
                         if style == "clutter":
                             random_clutter_image = choice(graphics["clutter"])
-                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"clutter",random_clutter_image) #creates an instance of Tile class passing the position and list with sprites 
+                            Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"clutter",random_clutter_image) #creates an instance of Tile class passing the position and list with sprites
                         if style == "objects":
                             surf = graphics["objects"][int(col)]
                             Tile((x,y),[self.visible_sprites,self.obstacles_sprites],"objects",surf)
@@ -111,7 +118,7 @@ class Level:
         if self.current_attack:
             self.current_attack.kill()
         self.current_attack = None
-        
+
 
     #empty all sprite groups and refill them with new set of sprites from the other level
     def update_map(self):
@@ -121,16 +128,16 @@ class Level:
         self.collectible_sprites.empty()
         self.obstacles_sprites.empty()
         self.create_map()
-        
+
     def check_coin_collisons(self):
         collided_coins = pygame.sprite.spritecollide(self.player, self.collectible_sprites, True)
         if collided_coins:
             for coin in collided_coins:
                 self.change_coins(1)
-            
 
-    
-        
+
+
+
 
 
     #check for a collision with a tile responisble for level transition
@@ -145,8 +152,16 @@ class Level:
                 floor_height = self.floor_surf.get_height() * 2
                 self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
                 self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+            elif self.level_index == 1:
+                self.level_index += 1
+                self.player_pos = (200,5900)
+                self.floor_surf = pygame.image.load("../graphics/tilemap/level2_ground.png").convert()
+                floor_width = self.floor_surf.get_width() * 2
+                floor_height = self.floor_surf.get_height() * 2
+                self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
             else:
-                self.level_index -= 1
+                self.level_index -= 2
                 self.player_pos = (3758,219)
                 self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
                 floor_width = self.floor_surf.get_width() * 2
@@ -172,28 +187,28 @@ class Level:
         self.shadow_sprites.shadow_draw(self.player)
         self.check_coin_collisons()
         self.check_special_collisions()
-        self.visible_sprites.update()   
-        self.shadow_sprites.update() 
+        self.visible_sprites.update()
+        self.shadow_sprites.update()
         debug(self.player.rect.topleft)
-        
+
 
 
 class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting sprites by Y coordinate and thanks to that we're going to give them some overlap
     def __init__(self):
 
         #general setup
-        super().__init__()    
+        super().__init__()
         self.display_surface = pygame.display.get_surface()
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
-        self.offset = pygame.math.Vector2() 
+        self.offset = pygame.math.Vector2()
 
     def custom_draw(self, player, floor_surf, floor_rect):
 
         #getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
-        
+
         #offset for floor
         offset_floor_rect = floor_rect.topleft - self.offset
         self.display_surface.blit(floor_surf,offset_floor_rect)
@@ -203,14 +218,14 @@ class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting spr
             offset_rect = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_rect)
 
-class YsortCameraShadowGroup(pygame.sprite.Group): 
+class YsortCameraShadowGroup(pygame.sprite.Group):
     def __init__(self):
 
-        super().__init__()    
+        super().__init__()
         self.display_surface = pygame.display.get_surface()
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
-        self.offset = pygame.math.Vector2() 
+        self.offset = pygame.math.Vector2()
 
     def shadow_draw(self, player):
 
