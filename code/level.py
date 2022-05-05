@@ -155,7 +155,7 @@ class Level:
             elif self.level_index == 1:
                 self.level_index += 1
                 self.player_pos = (200,5900)
-                self.floor_surf = pygame.image.load("../graphics/tilemap/level2_ground.png").convert()
+                self.floor_surf = pygame.image.load("../graphics/tilemap/level3_ground.png").convert()
                 floor_width = self.floor_surf.get_width() * 2
                 floor_height = self.floor_surf.get_height() * 2
                 self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
