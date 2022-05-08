@@ -180,10 +180,10 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
         
         #set the image
-        if self.status == "right_idle" or self.status == "left_idle" or self.status == "up_idle" or self.status == "down_idle" or self.status == "left" or self.status == "right":
-            self.image = animation[int(self.frame_index)]
-            self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
-            self.rect = self.image.get_rect(center = self.hitbox.center)
+        
+        self.image = animation[int(self.frame_index)]
+        self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
+        self.rect = self.image.get_rect(center = self.hitbox.center)
 
     def update(self):
         self.input()

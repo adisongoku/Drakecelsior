@@ -7,6 +7,8 @@ from support import *
 from random import choice
 from ui import UI
 from weapon import Weapon
+import numpy as np
+
 
 class Level:
     def __init__(self, change_coins):
@@ -19,9 +21,10 @@ class Level:
         floor_width = self.floor_surf.get_width() * 2
         floor_height = self.floor_surf.get_height() * 2
         self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
-
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
-
+        self.collectibles_path = "../map/level_1_collectibles.csv"
+        self.coin_arr = []
+        
         #sprite group setup
         self.visible_sprites = YsortCameraGroup() #replacing default pygame sprite group with our custom one, to create a functional camera
         self.obstacles_sprites = pygame.sprite.Group()
@@ -51,7 +54,7 @@ class Level:
                 "boundary" : import_csv_layout("../map/level_1_boundaries.csv"),
                 "clutter": import_csv_layout("../map/level_1_clutter.csv"),
                 "objects": import_csv_layout("../map/level_1_objects.csv"),
-                "collectibles": import_csv_layout("../map/level_1_collectibles.csv"),
+                "collectibles": import_csv_layout(self.collectibles_path),
                 "walls": import_csv_layout("../map/level_1_walls.csv"),
                 "special_tiles": import_csv_layout("../map/level_1_special_tiles.csv"),
                 "shadows": import_csv_layout("../map/level_1_shadows.csv")
@@ -81,7 +84,6 @@ class Level:
         }
 
         levels = [level_1,level_2,level_3]
-
 
         for style,layout in levels[self.level_index].items():
             for row_index, row in enumerate(layout):
@@ -135,10 +137,21 @@ class Level:
             for coin in collided_coins:
                 self.change_coins(1)
 
+                #check for coin pos
+                coin_pos = coin.get_pos()
+                coin_arr = import_csv_layout(self.collectibles_path)
 
+                #find coin in the array and delete it from layout
+                for row in range(len(coin_arr)):
+                   for col in range(len(coin_arr[row])):
+                        if coin_arr[row][col] == "0":
+                            if row * TILESIZE == coin_pos[1] and col * TILESIZE == coin_pos[0]:
+                                coin_arr[row][col] = "-1"
 
-
-
+                #export new layout to a different file
+                self.coin_arr = np.asarray(coin_arr)
+                np.savetxt('../saves/level_1_collectibles.csv', self.coin_arr, fmt='%s',delimiter=",")
+                self.collectibles_path = "../saves/level_1_collectibles.csv"
 
     #check for a collision with a tile responisble for level transition
     def check_special_collisions(self):
@@ -148,6 +161,14 @@ class Level:
                 self.level_index += 1
                 self.player_pos = (1202,2207)
                 self.floor_surf = pygame.image.load("../graphics/tilemap/level2_ground.png").convert()
+                floor_width = self.floor_surf.get_width() * 2
+                floor_height = self.floor_surf.get_height() * 2
+                self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))    
+            elif self.level_index == 1:
+                self.level_index += 1
+                self.player_pos = (200,5900)
+                self.floor_surf = pygame.image.load("../graphics/tilemap/level3_ground.png").convert()
                 floor_width = self.floor_surf.get_width() * 2
                 floor_height = self.floor_surf.get_height() * 2
                 self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
