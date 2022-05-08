@@ -173,17 +173,18 @@ class Player(pygame.sprite.Sprite):
                     # self.can_switch_weapon = True
 
     def animate(self):
-        animation = self.animations[self.status]
-        #loop over the frame index
-        self.frame_index += self.animation_speed
-        if self.frame_index >= len(animation):
-            self.frame_index = 0
+        if self.status == "right_idle" or self.status == "left_idle" or self.status == "up_idle" or self.status == "down_idle" or self.status == "left" or self.status == "right"or self.status == "up" or self.status == "down":
+            animation = self.animations[self.status]
+            #loop over the frame index
+            self.frame_index += self.animation_speed
+            if self.frame_index >= len(animation):
+                self.frame_index = 0
         
-        #set the image
-        
-        self.image = animation[int(self.frame_index)]
-        self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
-        self.rect = self.image.get_rect(center = self.hitbox.center)
+            #set the image
+            
+            self.image = animation[int(self.frame_index)]
+            self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
+            self.rect = self.image.get_rect(center = self.hitbox.center)
 
     def update(self):
         self.input()
