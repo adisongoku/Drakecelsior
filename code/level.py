@@ -8,6 +8,7 @@ from random import choice
 from ui import UI
 from weapon import Weapon
 import numpy as np
+from enemy import Enemy
 
 
 class Level:
@@ -34,6 +35,8 @@ class Level:
 
         # attack sprites
         self.current_attack = None
+        self.attack_sprites = pygame.sprite.Group()
+        self.attackable_sprites = pygame.sprite.Group()
 
         # coin sprites
         self.collided_coins = None
@@ -57,7 +60,8 @@ class Level:
                 "collectibles": import_csv_layout(self.collectibles_path),
                 "walls": import_csv_layout("../map/level_1_walls.csv"),
                 "special_tiles": import_csv_layout("../map/level_1_special_tiles.csv"),
-                "shadows": import_csv_layout("../map/level_1_shadows.csv")
+                "shadows": import_csv_layout("../map/level_1_shadows.csv"),
+                "entities": import_csv_layout("../map/level_1_enemy.csv")
         }
 
         level_2 = {
@@ -110,11 +114,14 @@ class Level:
                         if style == "shadows":
                             surf = graphics["shadows"][int(col) - 1]
                             Tile((x,y),[self.shadow_sprites],"shadows",surf)
+                        if style == 'entities':
+                            Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites)
+
 
         self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack)
 
     def create_attack(self):
-        self.current_attack = Weapon(self.player, [self.visible_sprites])
+        self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
 
     def destroy_attack(self):
         if self.current_attack:
@@ -202,6 +209,14 @@ class Level:
                 pygame.display.update()
                 pygame.time.delay(5)
 
+    def player_attack_logic(self):
+        if self.attack_sprites:
+            for attack_sprite in self.attack_sprites:
+                collision_sprites = pygame.sprite.spritecollide(attack_sprite, self.attackable_sprites, True)
+                if collision_sprites:
+                    for target_sprite in collision_sprites:
+                        target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+
     def run(self):
         #update and draw the game
         self.visible_sprites.custom_draw(self.player, self.floor_surf, self.floor_rect)
@@ -209,6 +224,8 @@ class Level:
         self.check_coin_collisons()
         self.check_special_collisions()
         self.visible_sprites.update()
+        self.visible_sprites.enemy_update(self.player)
+        self.player_attack_logic()
         self.shadow_sprites.update()
         debug(self.player.rect.topleft)
 
@@ -238,6 +255,11 @@ class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting spr
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery): #CENTER Y!
             offset_rect = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_rect)
+    
+    def enemy_update(self, player):
+        enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
+        for sprite in enemy_sprites:
+            sprite.enemy_update(player)
 
 class YsortCameraShadowGroup(pygame.sprite.Group):
     def __init__(self):
@@ -256,3 +278,4 @@ class YsortCameraShadowGroup(pygame.sprite.Group):
         for sprite in self.sprites(): #CENTER Y!
             offset_rect = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_rect)
+

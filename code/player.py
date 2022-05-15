@@ -4,8 +4,9 @@ import sys
 from settings import *
 from debug import debug
 from support import import_folder
+from entity import Entity
 
-class Player(pygame.sprite.Sprite):
+class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack):
         super().__init__(groups) #initialises the parent class passing the groups variable into it
         self.image = pygame.image.load("../graphics/test/drake.png").convert_alpha()
@@ -18,11 +19,9 @@ class Player(pygame.sprite.Sprite):
         #graphics setup
         self.import_player_assets()
         self.status = "down"
-        self.frame_index = 0
-        self.animation_speed = 0.1
+
 
         #movement
-        self.direction = pygame.math.Vector2() #this gives us a vector that has x and y and by default they're both 0
         self.speed = 5
         self.attacking = False
         self.attack_cooldown = 400
@@ -38,7 +37,14 @@ class Player(pygame.sprite.Sprite):
         self.can_switch_weapon = True
         self.weapon_switch_time = None
         self.switch_duration_cooldown = 200
-        
+
+        # stats 
+        self.stats = {'health' : 100, 'energy': 60, 'attack': 1, 'magic': 4, 'speed': 5}
+        self.health = self.stats['health'] * 0.5
+        self.energy = self.stats['energy'] * 0.8
+        self.exp = 123
+        self.speed = self.stats['speed']
+         
 
 
     def import_player_assets(self):
@@ -132,40 +138,11 @@ class Player(pygame.sprite.Sprite):
             if "attack" in self.status:
                 self.status = self.status.replace("_attack","")
 
-    def move(self,speed):
-        if self.direction.magnitude() != 0: #check length of the vector (if vector is 0 it can't be normalised)
-            self.direction = self.direction.normalize() #if length of the vector is bigger than 1, normalize it 
-        
-        self.hitbox.x += self.direction.x * speed
-        self.collision("horizontal")
-        self.hitbox.y += self.direction.y * speed
-        self.collision("vertical")
-        self.rect.center = self.hitbox.center
-
-    def collision(self,direction):
-        keys = pygame.key.get_pressed()
-        if not keys[pygame.K_LCTRL]:
-            if direction == "horizontal":
-                for obstacle in self.obstacle_sprites:
-                    if obstacle.hitbox.colliderect(self.hitbox):
-                        if self.direction.x > 0: #moving right
-                            self.hitbox.right = obstacle.hitbox.left
-                        if self.direction.x < 0: #moving left
-                            self.hitbox.left = obstacle.hitbox.right
-
-            if direction == "vertical":
-                for obstacle in self.obstacle_sprites:
-                    if obstacle.hitbox.colliderect(self.hitbox):
-                        if self.direction.y > 0: #moving down
-                            self.hitbox.bottom = obstacle.hitbox.top
-                        if self.direction.y < 0: #moving up
-                            self.hitbox.top = obstacle.hitbox.bottom            
-
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
         
         if self.attacking:
-            if current_time - self.attack_time >= self.attack_cooldown:
+            if current_time - self.attack_time >= self.attack_cooldown + weapon_data[self.weapon]['cooldown']:
                 self.attacking = False
                 self.destroy_attack()
             # if self.can_switch_weapon:
@@ -185,6 +162,11 @@ class Player(pygame.sprite.Sprite):
             self.image = animation[int(self.frame_index)]
             self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
             self.rect = self.image.get_rect(center = self.hitbox.center)
+
+    def get_full_weapon_damage(self):
+        base_damage = self.stats['attack']
+        weapon_damage = weapon_data[self.weapon]['damage']
+        return base_damage + weapon_damage
 
     def update(self):
         self.input()

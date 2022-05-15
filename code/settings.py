@@ -11,5 +11,10 @@ FPS = 60
 TILESIZE = 128
 
 weapon_data = {
-    'fireball': {'cooldown': 100, 'damage': 15, 'graphic':'../graphics/weapons/fireball/full.png'}
+    'fireball': {'cooldown': 100, 'damage': 1, 'graphic':'../graphics/weapons/fireball/full.png'}
+}
+
+# enemy 
+monster_data = {
+    'orc': {'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'speed': 5, 'resistance': 3, 'attack_radius': 80, 'notice_radius' : 360}
 }
