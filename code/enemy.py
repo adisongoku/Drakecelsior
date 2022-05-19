@@ -17,6 +17,7 @@ class Enemy(Entity):
         # depending on status enemy will be doing different actions 
         self.status = 'idle'
         self.image = pygame.image.load("../graphics/monsters/orc/orc.png")
+        self.image = pygame.transform.scale(self.image,(TILESIZE,TILESIZE))
 
         # movement
         self.rect = self.image.get_rect(topleft = pos)
