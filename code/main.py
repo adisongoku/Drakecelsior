@@ -1,5 +1,6 @@
 from turtle import screensize
 import pygame,sys
+from support import *
 from settings import * #the star makes it to import everything from settings
 from debug import debug
 from level import Level
@@ -29,7 +30,8 @@ class Game:
     def run(self):
         while True:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
+                    clean_files() #deletes coin position files
                     pygame.quit()
                     sys.exit()
 
