@@ -70,7 +70,8 @@ class Level:
                 "collectibles": import_csv_layout(self.collectibles_path),
                 "walls": import_csv_layout("../map/level_2_walls.csv"),
                 "special_tiles": import_csv_layout("../map/level_2_special_tiles.csv"),
-                "shadows": import_csv_layout("../map/level_2_shadows.csv")
+                "shadows": import_csv_layout("../map/level_2_shadows.csv"),
+                "entities": import_csv_layout("../map/level_2_enemy.csv")
         }
 
         level_3 = {
@@ -172,10 +173,11 @@ class Level:
         if(collided):
             for collided_tile in collided:
                 collided_tile_pos = collided_tile.get_pos()
+                print(collided_tile_pos)
             #transition to level 2
             if collided_tile_pos == (3712,0) or collided_tile_pos == (3840,0):
                 self.level_index = 1
-                self.player_pos = (1202,2207)
+                self.player_pos = (1076,4325)
                 self.floor_surf = pygame.image.load("../graphics/tilemap/level2_ground.png").convert()
                 floor_width = self.floor_surf.get_width() * 2
                 floor_height = self.floor_surf.get_height() * 2
@@ -199,7 +201,7 @@ class Level:
                 else:
                     self.collectibles_path = "../map/level_3_collectibles.csv"
             #transition to level 1
-            elif collided_tile_pos == (6272, 5888) or collided_tile_pos == (6272, 6016) or collided_tile_pos == (1152, 2432) or collided_tile_pos == (1280, 2432) :
+            elif collided_tile_pos == (1024, 4480) and self.level_index == 1 or collided_tile_pos == (1152, 4480) and self.level_index == 1 or collided_tile_pos == (1792, 5120) and self.level_index == 1 or collided_tile_pos == (1792, 5248) and self.level_index == 1 or collided_tile_pos == (1152, 2432) or collided_tile_pos == (1280, 2432) :
                 self.level_index = 0
                 self.player_pos = (3758,219)
                 self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
