@@ -63,11 +63,6 @@ class Player(Entity):
         if not self.attacking:
             keys = pygame.key.get_pressed()
 
-            #close game
-            if keys[pygame.K_ESCAPE]:
-                pygame.quit()
-                sys.exit()
-
             #movement input
             if keys[pygame.K_UP]:
                 self.direction.y = -1
