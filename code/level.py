@@ -26,7 +26,7 @@ class Level:
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
         self.collectibles_path = "../map/level_1_collectibles.csv"
         self.coin_arr = []
-        
+
         #sprite group setup
         self.visible_sprites = YsortCameraGroup() #replacing default pygame sprite group with our custom one, to create a functional camera
         self.obstacles_sprites = pygame.sprite.Group()
@@ -78,7 +78,8 @@ class Level:
                 "collectibles": import_csv_layout(self.collectibles_path),
                 "walls": import_csv_layout("../map/level_3_walls.csv"),
                 "special_tiles": import_csv_layout("../map/level_3_special_tiles.csv"),
-                "shadows": import_csv_layout("../map/level_3_shadows.csv")
+                "shadows": import_csv_layout("../map/level_3_shadows.csv"),
+                "entities": import_csv_layout("../map/level_3_enemy.csv")
         }
 
         graphics = {
@@ -182,12 +183,12 @@ class Level:
                 floor_width = self.floor_surf.get_width() * 2
                 floor_height = self.floor_surf.get_height() * 2
                 self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
-                self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))  
+                self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
                 if exists("../saves/level_2_collectibles.csv"):
                     self.collectibles_path = "../saves/level_2_collectibles.csv"
                 else:
                     self.collectibles_path = "../map/level_2_collectibles.csv"
-            #transition to level 3  
+            #transition to level 3
             elif collided_tile_pos == (1152, 1792) and self.level_index == 0:
                 self.level_index = 2
                 self.player_pos = (200,5900)
@@ -274,7 +275,7 @@ class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting spr
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery): #CENTER Y!
             offset_rect = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_rect)
-    
+
     def enemy_update(self, player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
         for sprite in enemy_sprites:
@@ -297,4 +298,3 @@ class YsortCameraShadowGroup(pygame.sprite.Group):
         for sprite in self.sprites(): #CENTER Y!
             offset_rect = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_rect)
-
