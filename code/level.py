@@ -245,6 +245,7 @@ class Level:
         debug(self.player.rect.topleft)
         debug(self.level_index,30,10)
 
+#test
 
 
 class YsortCameraGroup(pygame.sprite.Group): #YSort means that we're sorting sprites by Y coordinate and thanks to that we're going to give them some overlap
