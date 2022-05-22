@@ -188,7 +188,7 @@ class Level:
                 else:
                     self.collectibles_path = "../map/level_2_collectibles.csv"
             #transition to level 3  
-            elif collided_tile_pos == (2432,2048) or collided_tile_pos == (2432,2176):
+            elif collided_tile_pos == (1152, 1792) and self.level_index == 0:
                 self.level_index = 2
                 self.player_pos = (200,5900)
                 self.floor_surf = pygame.image.load("../graphics/tilemap/level3_ground.png").convert()
