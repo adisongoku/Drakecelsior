@@ -118,7 +118,7 @@ class Level:
                             surf = graphics["shadows"][int(col) - 1]
                             Tile((x,y),[self.shadow_sprites],"shadows",surf)
                         if style == 'entities':
-                            Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites)
+                            Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites, self.damage_player)
 
         self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack)
 
@@ -174,7 +174,6 @@ class Level:
         if(collided):
             for collided_tile in collided:
                 collided_tile_pos = collided_tile.get_pos()
-                print(collided_tile_pos)
             #transition to level 2
             if collided_tile_pos == (3712,0) or collided_tile_pos == (3840,0):
                 self.level_index = 1
@@ -233,7 +232,15 @@ class Level:
                 collision_sprites = pygame.sprite.spritecollide(attack_sprite, self.attackable_sprites, True)
                 if collision_sprites:
                     for target_sprite in collision_sprites:
-                        target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+                        if target_sprite.sprite_type == 'clutter':
+                           target_sprite.kill()
+                        else:
+                            target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+    def damage_player(self, amount, attack_type):
+        if self.player.vulnerable:
+            self.player.health -= amount
+            self.player.vulnerable = False
+            self.player.hurt_time = pygame.time.get_ticks()
 
     def run(self):
         #update and draw the game
@@ -244,6 +251,7 @@ class Level:
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
         self.player_attack_logic()
+        self.ui.display(self.player)
         self.shadow_sprites.update()
         debug(self.player.rect.topleft)
         debug(self.level_index,30,10)

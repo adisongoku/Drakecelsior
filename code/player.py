@@ -39,11 +39,17 @@ class Player(Entity):
         self.switch_duration_cooldown = 200
 
         # stats 
-        self.stats = {'health' : 100, 'energy': 60, 'attack': 1, 'magic': 4, 'speed': 5}
+        self.stats = {'health' : 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 5}
         self.health = self.stats['health'] * 0.5
         self.energy = self.stats['energy'] * 0.8
         self.exp = 123
         self.speed = self.stats['speed']
+
+                # damage timer
+        self.vulnerable = True
+        self.hurt_time = None
+        self.invulnerability_duration = 500
+
          
 
 
@@ -143,6 +149,9 @@ class Player(Entity):
             # if self.can_switch_weapon:
                 # if current_time - self.weapon_switch_time >= self.switch_duration_cooldown:
                     # self.can_switch_weapon = True
+        if not self.vulnerable:
+            if current_time - self.hurt_time >= self.invulnerability_duration:
+                self.vulnerable = True
 
     def animate(self):
         if self.status == "right_idle" or self.status == "left_idle" or self.status == "up_idle" or self.status == "down_idle" or self.status == "left" or self.status == "right"or self.status == "up" or self.status == "down":
@@ -157,6 +166,11 @@ class Player(Entity):
             self.image = animation[int(self.frame_index)]
             self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
             self.rect = self.image.get_rect(center = self.hitbox.center)
+            if not self.vulnerable:
+                alpha = self.wave_value()
+                self.image.set_alpha(alpha)
+            else:
+                self.image.set_alpha(255)
 
     def get_full_weapon_damage(self):
         base_damage = self.stats['attack']
