@@ -16,7 +16,7 @@ class UI:
         self.coin = pygame.image.load('../graphics/collectibles/1.png')
         self.coin_rect = self.coin.get_rect(topleft = (50, 161))
         self.font = pygame.font.Font('../graphics/ui/Minecraft.ttf', 30)
-    
+    #kdjasgdkja
     def show_bar(self, current, max_amount, bg_rect, color):
         pygame.draw.rect(self.display_surface, UI_BG_COLOR, bg_rect)
 
