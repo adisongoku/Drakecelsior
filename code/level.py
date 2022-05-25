@@ -19,6 +19,8 @@ class Level:
         #level information
         self.level_index = 0
         self.player_pos = (193,2363)
+        self.player_status = "right"
+        self.transitioning = False
         self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
         floor_width = self.floor_surf.get_width() * 2
         floor_height = self.floor_surf.get_height() * 2
@@ -118,7 +120,7 @@ class Level:
                         if style == 'entities':
                             Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites, self.damage_player)
 
-        self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack)
+        self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack, self.player_status, self.transitioning)
 
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
@@ -137,7 +139,6 @@ class Level:
         self.collectible_sprites.empty()
         self.obstacles_sprites.empty()
         self.create_map()
-
     def check_coin_collisons(self):
         collided_coins = pygame.sprite.spritecollide(self.player, self.collectible_sprites, True)
         if collided_coins:
@@ -172,11 +173,17 @@ class Level:
             for collided_tile in collided:
                 collided_tile_pos = collided_tile.get_pos()
                 print(collided_tile_pos)
+
+                #this assures that player's sprite direction won't get overriden by input from keyboard while transitionning to another level
+                self.transitioning = True
+
             #first checking what level we are on and then checking which door we go through
             match self.level_index:
+
                 #level 1
                 case 0:
                     match collided_tile_pos:
+
                         #transition to level 2
                         case (3712,0) | (3840,0):
                             self.level_index = 1
@@ -190,6 +197,7 @@ class Level:
                                 self.collectibles_path = "../saves/level_2_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_2_collectibles.csv"
+
                         #transition to level 3
                         case (1152, 1792):
                             self.level_index = 2
@@ -203,11 +211,13 @@ class Level:
                                 self.collectibles_path = "../saves/level_3_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_3_collectibles.csv"
+
                 #level 2
                 case 1:
                     match collided_tile_pos:
+
                         #transition to level 1
-                        case (1024, 4480) | (1152, 4480) | (1792, 5120) | (1792, 5248):
+                        case (1024, 4480) | (1152, 4480):
                             self.level_index = 0
                             self.player_pos = (3758,219)
                             self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
@@ -219,9 +229,24 @@ class Level:
                                 self.collectibles_path = "../saves/level_1_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
+                        case (1792, 5120) | (1792, 5248):
+                            self.level_index = 0
+                            self.player_pos = (3758,219)
+                            self.player_status = "down"
+                            self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
+                            floor_width = self.floor_surf.get_width() * 2
+                            floor_height = self.floor_surf.get_height() * 2
+                            self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                            self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+                            if exists("../saves/level_1_collectibles.csv"):
+                                self.collectibles_path = "../saves/level_1_collectibles.csv"
+                            else:
+                                self.collectibles_path = "../map/level_1_collectibles.csv"
+
                 #level 3
                 case 2:
                     match collided_tile_pos:
+                        
                         #transition to level 1
                         case (6272, 5888) | (6272, 6016):
                             self.level_index = 0
@@ -244,7 +269,6 @@ class Level:
             for alpha in range (0, 100):
                 fade_surf.set_alpha(alpha)
                 self.display_surface.blit(fade_surf, (0,0))
-                debug(alpha)
                 pygame.display.update()
                 pygame.time.delay(5)
 
