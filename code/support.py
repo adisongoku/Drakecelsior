@@ -4,7 +4,6 @@ import os, shutil
 import pygame
 import re
 from glob import glob
-
 from settings import TILESIZE
 
 def import_csv_layout(path):
@@ -46,5 +45,9 @@ def clean_files():
                 shutil.rmtree(file_path)
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+            
+
+
 
 
