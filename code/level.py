@@ -45,8 +45,6 @@ class Level:
         #sprite setup
         self.create_map()
 
-
-
         #ui
         self.ui = UI(self.display_surface)
         self.change_coins = change_coins
@@ -145,10 +143,9 @@ class Level:
         if collided_coins:
             for coin in collided_coins:
                 self.change_coins(1)
-
-                #check for coin pos
                 coin_pos = coin.get_pos()
-                #establish saving path and check if it already exists if it does, modify positions in already existing file
+
+                #establish saving path and check if it already exists. If it does, modify positions in already existing file
                 save_path = self.collectibles_path
                 if "map" in save_path:
                     save_path = save_path.replace("map", "saves")
@@ -174,7 +171,7 @@ class Level:
         if(collided):
             for collided_tile in collided:
                 collided_tile_pos = collided_tile.get_pos()
-
+                print(collided_tile_pos)
             #first checking what level we are on and then checking which door we go through
             match self.level_index:
                 #level 1
@@ -224,8 +221,20 @@ class Level:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
                 #level 3
                 case 2:
-                    pass
-
+                    match collided_tile_pos:
+                        #transition to level 1
+                        case (6272, 5888) | (6272, 6016):
+                            self.level_index = 0
+                            self.player_pos = (1150,2005)
+                            self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
+                            floor_width = self.floor_surf.get_width() * 2
+                            floor_height = self.floor_surf.get_height() * 2
+                            self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                            self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+                            if exists("../saves/level_1_collectibles.csv"):
+                                self.collectibles_path = "../saves/level_1_collectibles.csv"
+                            else:
+                                self.collectibles_path = "../map/level_1_collectibles.csv"
             self.fade()
             self.update_map()
 
