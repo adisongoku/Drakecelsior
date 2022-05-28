@@ -92,6 +92,14 @@ class Level:
                 "entities": import_csv_layout("../map/level_3_enemy.csv")
         }
 
+        level_2_2 = {
+                "collectibles": import_csv_layout(self.collectibles_path),
+                "walls": import_csv_layout("../map/level_4_walls.csv"),
+                "special_tiles": import_csv_layout("../map/level_4_special_tiles.csv"),
+                "shadows": import_csv_layout("../map/level_4_shadows.csv"),
+                "entities": import_csv_layout("../map/level_4_enemy.csv")
+        }
+
         graphics = {
                 "clutter": import_folder("../graphics/clutter"),
                 "objects": import_folder("../graphics/objects"),
@@ -100,7 +108,7 @@ class Level:
                 "shadows": import_folder("../graphics/shadows")
         }
 
-        levels = [level_1_1,level_1_2,level_1_3,level_2_1]
+        levels = [level_1_1,level_1_2,level_1_3,level_2_1,level_2_2]
 
         for style,layout in levels[self.level_index].items():
             for row_index, row in enumerate(layout):
@@ -207,7 +215,7 @@ class Level:
                                 self.collectibles_path = "../saves/level_2_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_2_collectibles.csv"
-                        
+
                         #transition to level 1_3
                         case (4864, 4736) | (4736, 4736) | (4992, 4736):
                             self.level_index = 2
@@ -284,7 +292,7 @@ class Level:
                 #level 1_3
                 case 2:
                     match collided_tile_pos:
-                        
+
                         #transition to level 1_1
                         case (384, 4864) | (512, 4864):
                             self.level_index = 0
@@ -299,7 +307,7 @@ class Level:
                                 self.collectibles_path = "../saves/level_1_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
-                        
+
                         #transition to level 1_2
                         case (0, 512) | (0, 640):
                             self.level_index = 1
@@ -314,13 +322,30 @@ class Level:
                                 self.collectibles_path = "../saves/level_2_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_2_collectibles.csv"
-                
+
                 #level 2_1
                 case 3:
                     match collided_tile_pos:
-                        
-                        #transition to level 1_1
+
+                        #transition to level 2.2
                         case (6272, 5888) | (6272, 6016):
+                            self.level_index = 4
+                            self.player_pos = (300,5900)
+                            self.floor_surf = pygame.image.load("../graphics/tilemap/level4_ground.png").convert()
+                            floor_width = self.floor_surf.get_width() * 2
+                            floor_height = self.floor_surf.get_height() * 2
+                            self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                            self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+                            if exists("../saves/level_4_collectibles.csv"):
+                                self.collectibles_path = "../saves/level_4_collectibles.csv"
+                            else:
+                                self.collectibles_path = "../map/level_4_collectibles.csv"
+                #level 2_2
+                case 4:
+                    match collided_tile_pos:
+
+                        #transition to level 1_1
+                        case (1000, 50) | (1200, 200):
                             self.level_index = 0
                             self.player_pos = (1150,2005)
                             self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
@@ -332,6 +357,7 @@ class Level:
                                 self.collectibles_path = "../saves/level_1_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
+
             self.fade()
             self.update_map()
 
