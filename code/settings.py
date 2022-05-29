@@ -29,6 +29,10 @@ HEALTH_COLOR = 'red'
 ENERGY_COLOR = 'blue'
 UI_BORDER_COLOR_ACTIVE = 'gold'
 
+#dialogue box
+DIALOGUE_BOX_WIDTH = 1000
+DIALOGUE_BOX_HEIGHT = 500
+
 
 weapon_data = {
     'fireball': {'cooldown': 100, 'damage': 15, 'graphic':'../graphics/weapons/fireball/full.png'}
