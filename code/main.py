@@ -28,6 +28,8 @@ class Game:
 
     def change_coins(self, amount):
         self.coins += amount
+        pygame.mixer.music.load('../audio/coin.wav')
+        pygame.mixer.music.play(0)
 
 
 
