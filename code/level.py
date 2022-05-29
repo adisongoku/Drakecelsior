@@ -345,7 +345,7 @@ class Level:
                     match collided_tile_pos:
 
                         #transition to level 1_1
-                        case (1000, 50) | (1200, 200):
+                        case (1408, 0) | (1536, 0):
                             self.level_index = 0
                             self.player_pos = (1150,2005)
                             self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
