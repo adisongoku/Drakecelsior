@@ -116,10 +116,10 @@ class Player(Entity):
             if keys[pygame.K_z]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
-                style = list(magic_data.keys())[self.long_weapon_index]
-                strength = list(magic_data.values())[self.long_weapon_index]['strength'] + self.stats['magic']
-                cost = list(magic_data.values())[self.long_weapon_index]['cost']
-                self.create_long_weapon(style, strength, cost)
+                style = list(magic_data.keys())[self.magic_index]
+                strength = list(magic_data.values())[self.magic_index]['strength'] + self.stats['magic']
+                cost = list(magic_data.values())[self.magic_index]['cost']
+                self.create_magic(style, strength, cost)
 
             # switching weapons
             if keys[pygame.K_q] and self.can_switch_weapon:

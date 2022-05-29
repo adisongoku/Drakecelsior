@@ -152,7 +152,7 @@ class Level:
 
     def create_magic(self, style, strength, cost):
         if style == 'flame':
-            pass
+            self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
 
 
         print(style)
