@@ -6,6 +6,7 @@ from settings import *
 from debug import debug
 from support import import_folder
 from entity import Entity
+from pygame import mixer
 
 class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic, status, transitioning):
@@ -47,7 +48,7 @@ class Player(Entity):
         self.can_switch_magic = True
         self.magic_switch_time = None
 
-        # stats 
+        # stats
         self.stats = {'health' : 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 5}
         self.health = self.stats['health'] * 0.5
         self.energy = self.stats['energy'] * 0.8
@@ -59,12 +60,16 @@ class Player(Entity):
         self.hurt_time = None
         self.invulnerability_duration = 500
 
+        # import sound
+        self.wepon_attack_sound = pygame.mixer.Sound('../audio/fireball.wav')
+        self.wepon_attack_sound.set_volume(0.4)
+
     def import_player_assets(self):
         character_path = "../graphics/player/"
         self.animations = {
             "up": [], "down": [], "left": [], "right": [],
             "right_idle": [], "left_idle": [], "up_idle": [], "down_idle": [],
-            "right_attack": [], "left_attack": [], "up_attack": [], "down_attack": [] 
+            "right_attack": [], "left_attack": [], "up_attack": [], "down_attack": []
         }
 
         for animation in self.animations.keys():
@@ -105,22 +110,23 @@ class Player(Entity):
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
-            
+                self.wepon_attack_sound.play()
+
             #magic input
             if keys[pygame.K_z]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
-                style = list(magic_data.keys())[self.magic_index]
-                strength = list(magic_data.values())[self.magic_index]['strength'] + self.stats['magic']
-                cost = list(magic_data.values())[self.magic_index]['cost']
-                self.create_magic(style, strength, cost)
-                
-            # switching weapons 
+                style = list(magic_data.keys())[self.long_weapon_index]
+                strength = list(magic_data.values())[self.long_weapon_index]['strength'] + self.stats['magic']
+                cost = list(magic_data.values())[self.long_weapon_index]['cost']
+                self.create_long_weapon(style, strength, cost)
+
+            # switching weapons
             if keys[pygame.K_q] and self.can_switch_weapon:
                 self.can_switch_weapon = False
                 self.attack_time = pygame.time.get_ticks()
-                
- 
+
+
                 # if self.weapon_index < len(list(weapon_data.keys())) - 1:
                     # self.weapon_index += 1
                 # else:
@@ -148,7 +154,7 @@ class Player(Entity):
 
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
-        
+
         if self.attacking:
             if current_time - self.attack_time >= self.attack_cooldown + weapon_data[self.weapon]['cooldown']:
                 self.attacking = False
@@ -167,9 +173,9 @@ class Player(Entity):
             self.frame_index += self.animation_speed
             if self.frame_index >= len(animation):
                 self.frame_index = 0
-        
+
             #set the image
-            
+
             self.image = animation[int(self.frame_index)]
             self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
             self.rect = self.image.get_rect(center = self.hitbox.center)
@@ -191,8 +197,3 @@ class Player(Entity):
         self.get_status()
         self.animate()
         self.move(self.speed)
-        
-
-
-
- 
