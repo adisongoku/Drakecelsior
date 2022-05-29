@@ -10,6 +10,8 @@ from weapon import Weapon
 import numpy as np
 from enemy import Enemy
 from os.path import exists
+from magic import MagicPlayer
+from particles import AnimationPlayer
 
 
 class Level:
@@ -50,6 +52,11 @@ class Level:
         #ui
         self.ui = UI(self.display_surface)
         self.change_coins = change_coins
+
+        # particles
+        self.animation_player = AnimationPlayer()
+
+        self.magic_player = MagicPlayer(self.animation_player)
 
 
     def create_map(self):
@@ -144,6 +151,10 @@ class Level:
         self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
 
     def create_magic(self, style, strength, cost):
+        if style == 'flame':
+            pass
+
+
         print(style)
         print(strength)
         print(cost)
@@ -390,6 +401,7 @@ class Level:
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
+            self.animation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
 
     def run(self):
         #update and draw the game
