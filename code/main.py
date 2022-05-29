@@ -5,10 +5,14 @@ from settings import * #the star makes it to import everything from settings
 from debug import debug
 from level import Level
 from ui import UI
+from pygame import mixer
+
+#pygame.mixer.music.load('../audio/game_music.wav')
+#pygame.mixer.music.play(-1)
 
 class Game:
     def __init__(self):
-               
+
         #general setup
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
@@ -34,6 +38,7 @@ class Game:
                     clean_files() #deletes coin position files
                     pygame.quit()
                     sys.exit()
+
 
             self.screen.fill("black")
             self.level.run()
