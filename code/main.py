@@ -8,10 +8,7 @@ from ui import UI
 
 class Game:
     def __init__(self):
-
-
-        # hehe test commit
-        
+               
         #general setup
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH,HEIGHT))

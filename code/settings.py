@@ -38,3 +38,9 @@ weapon_data = {
 monster_data = {
     'orc': {'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'speed': 5, 'resistance': 3, 'attack_radius': 80, 'notice_radius' : 360}
 }
+
+# long distance attack
+
+magic_data = {
+    'flame' : {'strength' : 5, 'cost': 20, 'graphic':'../graphics/weapons/flame/flame.png'}
+}

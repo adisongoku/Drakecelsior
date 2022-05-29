@@ -1,4 +1,5 @@
 from calendar import c
+# from readline import set_history_length
 import pygame
 import sys
 from settings import *
@@ -7,7 +8,7 @@ from support import import_folder
 from entity import Entity
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, status, transitioning):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic, status, transitioning):
         super().__init__(groups) #initialises the parent class passing the groups variable into it
         self.image = pygame.image.load("../graphics/test/drake.png").convert_alpha()
         self.player_height = self.image.get_height()
@@ -38,6 +39,13 @@ class Player(Entity):
         self.can_switch_weapon = True
         self.weapon_switch_time = None
         self.switch_duration_cooldown = 200
+
+        # long dist weapon
+        self.create_magic = create_magic
+        self.magic_index = 0
+        self.magic = list(magic_data.keys())[self.magic_index]
+        self.can_switch_magic = True
+        self.magic_switch_time = None
 
         # stats 
         self.stats = {'health' : 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 5}
@@ -102,6 +110,10 @@ class Player(Entity):
             if keys[pygame.K_z]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
+                style = list(magic_data.keys())[self.long_weapon_index]
+                strength = list(magic_data.values())[self.long_weapon_index]['strength'] + self.stats['magic']
+                cost = list(magic_data.values())[self.long_weapon_index]['cost']
+                self.create_long_weapon(style, strength, cost)
                 
             # switching weapons 
             if keys[pygame.K_q] and self.can_switch_weapon:

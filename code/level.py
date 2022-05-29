@@ -138,10 +138,15 @@ class Level:
                         if style == 'entities':
                             Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites, self.damage_player)
 
-        self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack, self.player_status, self.transitioning)
+        self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack, self.create_magic, self.player_status, self.transitioning)
 
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
+
+    def create_magic(self, style, strength, cost):
+        print(style)
+        print(strength)
+        print(cost)
 
     def destroy_attack(self):
         if self.current_attack:
