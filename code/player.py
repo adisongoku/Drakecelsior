@@ -55,7 +55,7 @@ class Player(Entity):
         self.exp = 123
         self.speed = self.stats['speed']
 
-                # damage timer
+        # damage timer
         self.vulnerable = True
         self.hurt_time = None
         self.invulnerability_duration = 500

@@ -12,6 +12,7 @@ from enemy import Enemy
 from os.path import exists
 from magic import MagicPlayer
 from particles import AnimationPlayer
+from cat import *
 
 
 class Level:
@@ -91,6 +92,14 @@ class Level:
                 "entities": import_csv_layout("../map/level1_3_enemy.csv")
         }
 
+        level_1_4 = {
+                "clutter": import_csv_layout("../map/level1_4_clutter.csv"),
+                "walls": import_csv_layout("../map/level1_4_walls.csv"),
+                "special_tiles": import_csv_layout("../map/level1_4_special_tiles.csv"),
+                "shadows": import_csv_layout("../map/level1_4_shadows.csv"),
+                "entities": import_csv_layout("../map/level1_4_enemy.csv")
+        }
+
         level_2_1 = {
                 "collectibles": import_csv_layout(self.collectibles_path),
                 "walls": import_csv_layout("../map/level_3_walls.csv"),
@@ -115,7 +124,7 @@ class Level:
                 "shadows": import_folder("../graphics/shadows")
         }
 
-        levels = [level_1_1,level_1_2,level_1_3,level_2_1,level_2_2]
+        levels = [level_1_1,level_1_2,level_1_3,level_2_1,level_2_2,level_1_4]
 
         for style,layout in levels[self.level_index].items():
             for row_index, row in enumerate(layout):
@@ -146,6 +155,8 @@ class Level:
                             Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites, self.damage_player)
 
         self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack, self.create_magic, self.player_status, self.transitioning)
+        if self.level_index == 5:
+            self.cat = CAT()
 
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
@@ -339,6 +350,17 @@ class Level:
                             else:
                                 self.collectibles_path = "../map/level_2_collectibles.csv"
 
+                        #transition to level1 boss room
+                        case (7552, 2304) | (7552, 2432) | (7552, 2560):
+                            self.level_index = 5
+                            self.player_pos = (1916, 2076)
+                            self.player_status = "up"
+                            self.floor_surf = pygame.image.load("../graphics/tilemap/level1_4_ground.png").convert()
+                            floor_width = self.floor_surf.get_width() * 2
+                            floor_height = self.floor_surf.get_height() * 2
+                            self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                            self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+
                 #level 2_1
                 case 3:
                     match collided_tile_pos:
@@ -373,6 +395,23 @@ class Level:
                                 self.collectibles_path = "../saves/level_1_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
+                #level1_boss_room
+                case 5:
+                    match collided_tile_pos:
+                        case (1920, 2304) | (2048, 2304) | (1920, 2304):
+                            self.level_index = 2
+                            self.player_pos = (268,545)
+                            self.player_status = "right"
+                            self.floor_surf = pygame.image.load("../graphics/tilemap/level1_3_ground.png").convert()
+                            floor_width = self.floor_surf.get_width() * 2
+                            floor_height = self.floor_surf.get_height() * 2
+                            self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                            self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+                            if exists("../saves/level1_3_collectibles.csv"):
+                                self.collectibles_path = "../saves/level1_3_collectibles.csv"
+                            else:
+                                self.collectibles_path = "../map/level1_3_collectibles.csv"
+                    pass
 
             self.fade()
             self.update_map()
@@ -416,6 +455,8 @@ class Level:
         self.shadow_sprites.update()
         debug(self.player.rect.topleft)
         debug(self.level_index,30,10)
+        if self.level_index == 5:
+            self.cat.animate_cat(self.player)
 
 #test
 

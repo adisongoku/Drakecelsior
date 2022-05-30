@@ -29,7 +29,8 @@ def import_folder(path):
         for image in sorted(img_files, key=natural_keys):
             full_path = path + '/' + image
             image_surf = pygame.image.load(full_path).convert_alpha()
-            image_surf = pygame.transform.scale(image_surf,(TILESIZE,TILESIZE))
+            if path != '../graphics/monsters/demon_cat':
+                image_surf = pygame.transform.scale(image_surf,(TILESIZE,TILESIZE))
             surface_list.append(image_surf)
 
     return surface_list
