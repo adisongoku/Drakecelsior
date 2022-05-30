@@ -1,11 +1,11 @@
-from turtle import screensize
+from turtle import bgcolor, screensize
 import pygame,sys
 from support import *
 from settings import * #the star makes it to import everything from settings
 from debug import debug
 from level import Level
 from ui import UI
-from pygame import mixer
+from pygame import Surface, mixer
 
 #pygame.mixer.music.load('../audio/game_music.wav')
 #pygame.mixer.music.play(-1)
@@ -34,7 +34,11 @@ class Game:
 
 
     def run(self):
+        pygame.display.set_caption("Menu")
         while True:
+
+            MENU_MOUSE_POS = pygame.mouse.get_pos()
+
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
                     clean_files() #deletes coin position files
