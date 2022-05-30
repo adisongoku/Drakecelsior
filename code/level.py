@@ -13,6 +13,7 @@ from os.path import exists
 from magic import MagicPlayer
 from particles import AnimationPlayer
 from cat import *
+import time
 
 
 class Level:
@@ -31,6 +32,7 @@ class Level:
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
         self.collectibles_path = "../map/level_1_collectibles.csv"
         self.coin_arr = []
+        
 
         #sprite group setup
         self.visible_sprites = YsortCameraGroup() #replacing default pygame sprite group with our custom one, to create a functional camera
@@ -441,6 +443,9 @@ class Level:
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
             self.animation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
+
+
+            
 
     def run(self):
         #update and draw the game

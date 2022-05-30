@@ -1,6 +1,7 @@
 import pygame
 from settings import BAR_HEIGHT, ENERGY_BAR_WIDTH, ENERGY_COLOR, HEALTH_BAR_WIDTH, HEALTH_COLOR, UI_BG_COLOR, UI_BORDER_COLOR, UI_FONT, UI_FONT_SIZE
 from support import *
+import time
 
 class UI:
     def __init__(self, surface):
@@ -37,6 +38,12 @@ class UI:
     def display(self, player):
         self.show_bar(player.health, player.stats['health'], self.health_bar_rect, HEALTH_COLOR)
         self.show_bar(player.energy, player.stats['energy'], self.energy_bar_rect, ENERGY_COLOR)
+        if player.health <= 0:
+            # self.display_surface.fill(ENERGY_COLOR)
+            # self.bg = pygame.image.load("../graphics/gameover.jpg")
+            # self.display_surface.blit(self.bg,(30, 60))
+            time.sleep(3)
+            pygame.quit()
         
 
 
