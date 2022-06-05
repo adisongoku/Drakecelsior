@@ -67,6 +67,14 @@ class Enemy(Entity):
 
 
         return (distance, direction)
+
+    def get_player_push_direction(self, player):
+        enemy_vec = pygame.math.Vector2(self.rect.center)
+        player_vec = pygame.math.Vector2(player.rect.center)
+        
+        direction = (enemy_vec - player_vec).normalize()
+       
+        return (direction)
     
     def get_status(self, player):
         distance = self.get_player_distance_direction(player)[0]
@@ -84,7 +92,7 @@ class Enemy(Entity):
     def actions(self, player):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()
-            self.damage_player(self.attack_damage, self.attack_type)
+            self.damage_player(self.attack_damage, self.attack_type)        
         elif self.status == 'move':
             self.direction = self.get_player_distance_direction(player)[1]
         else:
@@ -94,6 +102,8 @@ class Enemy(Entity):
         animation = self.animations[self.status]
         self.frame_index += self.animation_speed
         if self.frame_index >= len(animation):
+            if self.status == "attack":
+                self.can_attack = False
             self.frame_index = 0
 
         self.image = self.animations[self.status][int(self.frame_index)]
@@ -135,6 +145,7 @@ class Enemy(Entity):
     def hit_reaction(self):
         if not self.vulnerable:
             self.direction *= -self.resistance
+            
     
     def update(self):
         self.hit_reaction()

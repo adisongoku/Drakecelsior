@@ -29,7 +29,9 @@ def import_folder(path):
         for image in sorted(img_files, key=natural_keys):
             full_path = path + '/' + image
             image_surf = pygame.image.load(full_path).convert_alpha()
-            if path != '../graphics/monsters/demon_cat':
+            if 'cat_boss' in path:
+                image_surf = pygame.transform.scale(image_surf,(image_surf.get_width() * 3,image_surf.get_height() *3))
+            else:
                 image_surf = pygame.transform.scale(image_surf,(TILESIZE,TILESIZE))
             surface_list.append(image_surf)
 

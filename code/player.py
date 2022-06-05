@@ -189,6 +189,19 @@ class Player(Entity):
         base_damage = self.stats['attack']
         weapon_damage = weapon_data[self.weapon]['damage']
         return base_damage + weapon_damage
+    
+    def get_player_direction(self):
+        enemy_vec = pygame.math.Vector2(self.rect.center)
+        player_vec = pygame.math.Vector2(self.rect.center)
+        distance = (player_vec - enemy_vec).magnitude()
+
+        if distance > 0:
+            direction = (player_vec - enemy_vec).normalize()
+        else:
+            direction = pygame.math.Vector2()
+
+
+        return (distance, direction)
 
     def update(self):
         self.input()
@@ -197,3 +210,4 @@ class Player(Entity):
         self.get_status()
         self.animate()
         self.move(self.speed)
+       
