@@ -1,31 +1,63 @@
+from entity import Entity
 from support import import_folder
+from enemy import Enemy
+from settings import *
 import pygame
-class CAT:
-    def __init__(self):
-        self.animations = import_folder('../graphics/monsters/demon_cat')
-        self.display_surf = pygame.display.get_surface()
-        self.animation_speed = 0.03
-        self.frame_index = 0
-        self.half_width = self.display_surf.get_size()[0] // 2
-        self.half_height = self.display_surf.get_size()[1] // 2
-        self.offset = pygame.math.Vector2()
+class CAT(Enemy):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player):
+        super().__init__(monster_name, pos, groups, obstacle_sprites, damage_player)
+        self.sprite_type = 'enemy'
 
-    def animate_cat(self, player):
-        if self.frame_index < 35:
-            self.animation_speed = 0.1
-        else:
-            self.animation_speed = 0.03
-        
-        self.offset.x = player.rect.centerx - self.half_width
-        self.offset.y = player.rect.centery - self.half_height
+        # graphics 
+        self.import_graphics(monster_name)
+        # depending on status enemy will be doing different actions 
+        self.status = 'idle'
+        self.image = self.animations[self.status][self.frame_index]
 
-        self.frame_index += self.animation_speed
-        if self.frame_index >= len(self.animations):
-            self.frame_index = 0
+        # movement
+        self.rect = self.image.get_rect(topleft = pos)
+        self.hitbox = self.rect.inflate(0, -10)
+        self.obstacle_sprites = obstacle_sprites
 
-        self.image = self.animations[int(self.frame_index)]
-        self.image = pygame.transform.scale(self.image, (self.image.get_width()*3,self.image.get_height()*3))
-        self.rect = self.image.get_rect(center = (1916,1200))
-        offset_rect = self.rect.topleft - self.offset
-        self.display_surf.blit(self.image,offset_rect)
-        
+         # stats
+        self.monster_name = monster_name
+        monster_info = monster_data[self.monster_name]
+        self.health = monster_info['health']
+        self.exp = monster_info['exp']
+        self.speed = monster_info['speed']
+        self.attack_damage = monster_info['damage']
+        self.resistance = monster_info['resistance']
+        self.attack_radius = monster_info['attack_radius']
+        self.notice_radius = monster_info['notice_radius']
+        self.attack_type = monster_info['attack_type']
+
+        # player interaction
+        self.can_attack = True
+        self.attack_time = None
+        self.attack_cooldown = 400
+        self.damage_player = damage_player
+
+        # invincibility timer
+        self.vulnerable = True
+        self.hit_time = None
+        self.invincibility_duration = 300
+
+        def get_status(self, player):
+            distance = self.get_player_distance_direction(player)[0]
+            
+            if distance <= self.attack_radius and self.can_attack == True:
+                if self.status != 'attack':
+                    self.frame_index = 0
+                self.status = 'attack'
+            elif distance <= self.notice_radius:
+                self.status = 'move'
+            else:
+                self.status = 'idle'
+
+        def import_graphics(self, name):
+            self.animations = {'idle':[], 'move':[], 'attack':[]}
+            main_path = f'../graphics/monsters/{name}/'
+            for animation in self.animations.keys():
+                self.animations[animation] = import_folder(main_path + animation) 
+
+            

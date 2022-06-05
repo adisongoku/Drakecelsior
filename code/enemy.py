@@ -16,8 +16,7 @@ class Enemy(Entity):
         self.import_graphics(monster_name)
         # depending on status enemy will be doing different actions 
         self.status = 'idle'
-        self.image = pygame.image.load("../graphics/monsters/orc/orc.png")
-        self.image = pygame.transform.scale(self.image,(TILESIZE,TILESIZE))
+        self.image = self.animations[self.status][self.frame_index]
 
         # movement
         self.rect = self.image.get_rect(topleft = pos)
@@ -92,16 +91,25 @@ class Enemy(Entity):
             self.direction = pygame.math.Vector2()
     
     def animate(self):
+        animation = self.animations[self.status]
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
+
+        self.image = self.animations[self.status][int(self.frame_index)]
+        self.rect = self.image.get_rect(center = self.hitbox.center)
+
+        # flicker
         if not self.vulnerable:
-            # flicker
+            
             alpha = self.wave_value()
             self.image.set_alpha(alpha)
         else:
             self.image.set_alpha(255)
 
     def cooldowns(self):
+        current_time = pygame.time.get_ticks()
         if not self.can_attack:
-            current_time = pygame.time.get_ticks()
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.can_attack = True
         if not self.vulnerable:

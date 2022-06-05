@@ -9,10 +9,10 @@ from ui import UI
 from weapon import Weapon
 import numpy as np
 from enemy import Enemy
+from cat import CAT
 from os.path import exists
 from magic import MagicPlayer
 from particles import AnimationPlayer
-from cat import *
 import time
 
 
@@ -154,11 +154,12 @@ class Level:
                             surf = graphics["shadows"][int(col) - 1]
                             Tile((x,y),[self.shadow_sprites],"shadows",surf)
                         if style == 'entities':
-                            Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites, self.damage_player)
+                            if col == '0':
+                                Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites, self.damage_player)
+                            if col == '2':
+                                CAT('cat_boss',(x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites,self.damage_player)
 
         self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack, self.create_magic, self.player_status, self.transitioning)
-        if self.level_index == 5:
-            self.cat = CAT()
 
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
@@ -430,13 +431,14 @@ class Level:
     def player_attack_logic(self):
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
-                collision_sprites = pygame.sprite.spritecollide(attack_sprite, self.attackable_sprites, True)
+                collision_sprites = pygame.sprite.spritecollide(attack_sprite, self.attackable_sprites, False)
                 if collision_sprites:
                     for target_sprite in collision_sprites:
                         if target_sprite.sprite_type == 'clutter':
                            target_sprite.kill()
                         else:
                             target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+
     def damage_player(self, amount, attack_type):
         if self.player.vulnerable:
             self.player.health -= amount
@@ -460,8 +462,6 @@ class Level:
         self.shadow_sprites.update()
         debug(self.player.rect.topleft)
         debug(self.level_index,30,10)
-        if self.level_index == 5:
-            self.cat.animate_cat(self.player)
 
 #test
 
