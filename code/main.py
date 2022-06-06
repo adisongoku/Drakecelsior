@@ -18,20 +18,25 @@ class Game:
         self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Drakcelsior")
+        self.bgm = pygame.mixer.Sound("../audio/Drakecelsior.mp3")
+        self.bgm.play(-1)
 
         #ui
         self.ui = UI(self.screen)
 
 
         self.coins = 0
-        self.level = Level(self.change_coins)
+        self.level = Level(self.change_coins, self.stop_bgm)
 
     def change_coins(self, amount):
         self.coins += amount
-        pygame.mixer.music.load('../audio/coin.wav')
-        pygame.mixer.music.play(0)
+        coin_sound = pygame.mixer.Sound('../audio/coin.wav')
+        coin_sound.set_volume(0.1)
+        coin_sound.play(0)
 
-
+    def stop_bgm(self):
+        self.bgm.stop()
+    
 
     def run(self):
         pygame.display.set_caption("Menu")

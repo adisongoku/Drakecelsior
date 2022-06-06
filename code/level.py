@@ -18,11 +18,11 @@ import time
 
 
 class Level:
-    def __init__(self, change_coins):
+    def __init__(self, change_coins, stop_bgm):
         #get the display surface
         self.display_surface = pygame.display.get_surface()
         #level information
-        self.level_index = 5
+        self.level_index = 0
         self.player_pos = (193,2363)
         self.player_status = "right"
         self.transitioning = False
@@ -33,6 +33,7 @@ class Level:
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
         self.collectibles_path = "../map/level_1_collectibles.csv"
         self.coin_arr = []
+        self.stop_bgm = stop_bgm
         
 
         #sprite group setup
@@ -158,7 +159,7 @@ class Level:
                             if col == '0':
                                 Enemy('orc', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites, self.damage_player)
                             if col == '2':
-                                CAT('cat_boss',(x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites,self.damage_player)
+                                CAT('cat_boss',(x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites,self.damage_player, self.stop_bgm)
 
         self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack, self.create_magic, self.player_status, self.transitioning)
         self.dialogue = DIALOGUE_BOX()

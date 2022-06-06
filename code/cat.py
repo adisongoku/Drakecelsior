@@ -8,11 +8,12 @@ import pygame
 import numpy
 import time
 class CAT(Enemy):
-    def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player, stop_bgm):
         super().__init__(monster_name, pos, groups, obstacle_sprites, damage_player)
 
         self.intro_finished = False
         self.status = 'waiting'
+        stop_bgm()
         self.music = pygame.mixer.Sound('../audio/cat_theme.mp3')
         self.music.set_volume(0.4)
         self.cutscene_played = False
