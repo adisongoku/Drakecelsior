@@ -486,10 +486,6 @@ class Level:
         self.player_attack_logic()
         self.ui.display(self.player)
         self.shadow_sprites.update()
-        debug(self.player.rect.topleft)
-        debug(self.level_index,30,10)
-        
-        #self.dialogue.draw_dialogue(DIALOGUE1,"drake")
 
 #test
 

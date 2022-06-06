@@ -107,7 +107,7 @@ class Player(Entity):
 
             #sprint
             if keys[pygame.K_LSHIFT]:
-                self.speed = 30
+                self.speed = 10
             else:
                 self.speed = 5
 
