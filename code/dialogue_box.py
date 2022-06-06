@@ -54,7 +54,10 @@ class DIALOGUE_BOX:
 
         if character == "drake":
             face_img = pygame.image.load("../graphics/player/face_img/drake_face.png").convert_alpha()
-            face_rect = face_img.get_rect(topright = box_rect.topleft)     
+            face_rect = face_img.get_rect(topright = box_rect.topleft)
+        elif character == "cat":
+            face_img = pygame.image.load("../graphics/monsters/cat_boss/face_img/cat_boss_face_img.png").convert_alpha()
+            face_rect = face_img.get_rect(topright = box_rect.topleft)
 
         self.display_surface.blit(face_img,face_rect)
         self.display_surface.blit(box_surf,box_rect)

@@ -50,10 +50,19 @@ def clean_files():
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 
-DIALOGUE1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse aliquam sodales odio, et scelerisque mi ullamcorper sed. Ut non nulla congue, malesuada felis a, suscipit est. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis sed eros hendrerit nisl iaculis semper. Duis lacinia urna augue, nec elementum felis tincidunt id. Aliquam ut consequat enim. Vestibulum vel aliquam orci. Aenean euismod nisl vitae orci rhoncus efficitur. Phasellus gravida felis lectus, eu varius libero rutrum vitae. Phasellus tristique ante sed fermentum lacinia. Curabitur ullamcorper libero eget arcu feugiat, quis facilisis augue dapibus. Donec ut molestie neque. Praesent tempor, metus vel varius maximus, turpis nibh mollis nisi, sit amet varius odio augue ut odio. Fusce mauris magna, aliquam elementum iaculis ut, fringilla vel elit. Nunc egestas lacus nunc, id placerat massa ornare eget"
+CAT_DIAL1 = "Who dares to interrupt my slumber!?"
+DIALOGUE1 = "Uh, me. Hello!"
+DIALOGUE2 = "My slumber got interrupted as well."
+DIALOGUE3 = "Do you know maybe where could I find that band of thieves that stole my pile of gold, and left coins everywhere?"
+CAT_DIAL2 = "I don't care, nor I Know!"
+CAT_DIAL3 = "Now DIE!"
+DIALOGUE4 = "Wait WHY!?"
+CAT_DIAL4 = "Because I'm THE BOSS, those are the rules here!"
+
+
+
 
             
-
 
 
 

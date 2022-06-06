@@ -29,10 +29,6 @@ HEALTH_COLOR = 'red'
 ENERGY_COLOR = 'magenta'
 UI_BORDER_COLOR_ACTIVE = 'gold'
 
-#dialogue box
-DIALOGUE_BOX_WIDTH = 1000
-DIALOGUE_BOX_HEIGHT = 500
-
 
 weapon_data = {
     'fireball': {'cooldown': 100, 'damage': 15, 'graphic':'../graphics/weapons/fireball/full.png'}
@@ -41,7 +37,7 @@ weapon_data = {
 # enemy 
 monster_data = {
     'orc': {'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius' : 720},
-    'cat_boss': {'health': 500, 'exp': 400, 'damage': 3, 'attack_type': 'slash', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius' : 360}
+    'cat_boss': {'health': 500, 'exp': 400, 'damage': 3, 'attack_type': 'slash', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius' : 800}
 }
 
 # long distance attack

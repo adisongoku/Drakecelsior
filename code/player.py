@@ -18,6 +18,7 @@ class Player(Entity):
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(-20,-60)
         self.transitioning = transitioning
+        self.can_move = True
 
         #graphics setup
         self.import_player_assets()
@@ -64,6 +65,11 @@ class Player(Entity):
         self.wepon_attack_sound = pygame.mixer.Sound('../audio/fireball.wav')
         self.wepon_attack_sound.set_volume(0.4)
 
+    def set_can_move(self, yesno):
+        self.can_move = yesno
+        self.direction.x = 0
+        self.direction.y = 0
+
     def import_player_assets(self):
         character_path = "../graphics/player/"
         self.animations = {
@@ -77,7 +83,7 @@ class Player(Entity):
             self.animations[animation] = import_folder(full_path)
 
     def input(self):
-        if not self.attacking and not self.transitioning:
+        if not self.attacking and not self.transitioning and self.can_move:
             keys = pygame.key.get_pressed()
 
             #movement input

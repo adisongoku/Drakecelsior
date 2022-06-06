@@ -22,7 +22,7 @@ class Level:
         #get the display surface
         self.display_surface = pygame.display.get_surface()
         #level information
-        self.level_index = 0
+        self.level_index = 5
         self.player_pos = (193,2363)
         self.player_status = "right"
         self.transitioning = False
@@ -171,11 +171,6 @@ class Level:
         if style == 'flame':
             self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
 
-
-        print(style)
-        print(strength)
-        print(cost)
-
     def destroy_attack(self):
         if self.current_attack:
             self.current_attack.kill()
@@ -223,8 +218,6 @@ class Level:
         if(collided):
             for collided_tile in collided:
                 collided_tile_pos = collided_tile.get_pos()
-                print(collided_tile_pos)
-
                 #this assures that player's sprite direction won't get overriden by input from keyboard while transitionning to another level
                 self.transitioning = True
 
@@ -248,6 +241,8 @@ class Level:
                                 self.collectibles_path = "../saves/level_2_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_2_collectibles.csv"
+                            self.fade()
+                            self.update_map()
 
                         #transition to level 1_3
                         case (4864, 4736) | (4736, 4736) | (4992, 4736):
@@ -263,6 +258,8 @@ class Level:
                                 self.collectibles_path = "../saves/level1_3_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level1_3_collectibles.csv"
+                            self.fade()
+                            self.update_map()
                         #transition to level 2_1
                         case (1152, 1792):
                             self.level_index = 3
@@ -276,6 +273,8 @@ class Level:
                                 self.collectibles_path = "../saves/level_3_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_3_collectibles.csv"
+                            self.fade()
+                            self.update_map()
 
                 #level 1_2
                 case 1:
@@ -294,6 +293,9 @@ class Level:
                                 self.collectibles_path = "../saves/level_1_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
+                            self.fade()
+                            self.update_map()
+
                         case (1792, 5120) | (1792, 5248):
                             self.level_index = 0
                             self.player_pos = (3758,219)
@@ -307,6 +309,9 @@ class Level:
                                 self.collectibles_path = "../saves/level_1_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
+                            self.fade()
+                            self.update_map()
+
                         #transition to level 1_3
                         case (6144, 896) | (6144, 1024):
                             self.level_index = 2
@@ -321,6 +326,8 @@ class Level:
                                 self.collectibles_path = "../saves/level1_3_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level1_3_collectibles.csv"
+                            self.fade()
+                            self.update_map()
 
                 #level 1_3
                 case 2:
@@ -340,6 +347,8 @@ class Level:
                                 self.collectibles_path = "../saves/level_1_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
+                            self.fade()
+                            self.update_map()
 
                         #transition to level 1_2
                         case (0, 512) | (0, 640):
@@ -355,6 +364,8 @@ class Level:
                                 self.collectibles_path = "../saves/level_2_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_2_collectibles.csv"
+                            self.fade()
+                            self.update_map()
 
                         #transition to level1 boss room
                         case (7552, 2304) | (7552, 2432) | (7552, 2560):
@@ -366,6 +377,8 @@ class Level:
                             floor_height = self.floor_surf.get_height() * 2
                             self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
                             self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+                            self.fade()
+                            self.update_map()
 
                 #level 2_1
                 case 3:
@@ -384,6 +397,8 @@ class Level:
                                 self.collectibles_path = "../saves/level_4_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_4_collectibles.csv"
+                            self.fade()
+                            self.update_map()
                 #level 2_2
                 case 4:
                     match collided_tile_pos:
@@ -401,6 +416,9 @@ class Level:
                                 self.collectibles_path = "../saves/level_1_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level_1_collectibles.csv"
+                            self.fade()
+                            self.update_map()
+
                 #level1_boss_room
                 case 5:
                     match collided_tile_pos:
@@ -417,10 +435,14 @@ class Level:
                                 self.collectibles_path = "../saves/level1_3_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level1_3_collectibles.csv"
-                    pass
+                            self.fade()
+                            self.update_map()
 
-            self.fade()
-            self.update_map()
+                        #BOSS TRIGGER
+                        case (2048, 1536) | (1920, 1536)| (1792, 1536):
+                            for monster in self.attackable_sprites:
+                                if monster.monster_name == "cat_boss":
+                                    monster.cat_set_intro_status(self.player)            
 
     def fade(self):
             fade_surf = pygame.Surface((WIDTH,HEIGHT))
@@ -465,7 +487,8 @@ class Level:
         self.shadow_sprites.update()
         debug(self.player.rect.topleft)
         debug(self.level_index,30,10)
-        self.dialogue.draw_dialogue(DIALOGUE1,"drake")
+        
+        #self.dialogue.draw_dialogue(DIALOGUE1,"drake")
 
 #test
 

@@ -67,14 +67,6 @@ class Enemy(Entity):
 
 
         return (distance, direction)
-
-    def get_player_push_direction(self, player):
-        enemy_vec = pygame.math.Vector2(self.rect.center)
-        player_vec = pygame.math.Vector2(player.rect.center)
-        
-        direction = (enemy_vec - player_vec).normalize()
-       
-        return (direction)
     
     def get_status(self, player):
         distance = self.get_player_distance_direction(player)[0]
@@ -140,6 +132,7 @@ class Enemy(Entity):
     
     def check_death(self):
         if self.health <= 0:
+            pygame.mixer.fadeout(2000)
             self.kill()
 
     def hit_reaction(self):

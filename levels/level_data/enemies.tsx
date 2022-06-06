@@ -5,6 +5,6 @@
   <image width="80" height="80" source="../../graphics/monsters/orc/orc.png"/>
  </tile>
  <tile id="2">
-  <image width="200" height="100" source="../../graphics/monsters/demon_cat/cat_boss0055.png"/>
+  <image width="76" height="57" source="../../graphics/monsters/cat_boss/idle/cat_boss0057.png"/>
  </tile>
 </tileset>
