@@ -233,6 +233,7 @@ class Level:
                         case (3712,0) | (3840,0):
                             self.level_index = 1
                             self.player_pos = (1076,4325)
+                            self.player_status = "up"
                             self.floor_surf = pygame.image.load("../graphics/tilemap/level_1_2_ground.png").convert()
                             floor_width = self.floor_surf.get_width() * 2
                             floor_height = self.floor_surf.get_height() * 2
@@ -285,6 +286,7 @@ class Level:
                         case (1024, 4480) | (1152, 4480):
                             self.level_index = 0
                             self.player_pos = (3758,219)
+                            self.player_status = "down"
                             self.floor_surf = pygame.image.load("../graphics/tilemap/level_ground.png").convert()
                             floor_width = self.floor_surf.get_width() * 2
                             floor_height = self.floor_surf.get_height() * 2

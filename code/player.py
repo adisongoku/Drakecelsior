@@ -15,7 +15,7 @@ class Player(Entity):
         self.player_height = self.image.get_height()
         self.player_width = self.image.get_width()
         self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(-20,-60)
+        self.hitbox = self.rect.inflate(100,-30)
         self.transitioning = transitioning
         self.can_move = True
 
