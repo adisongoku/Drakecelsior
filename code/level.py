@@ -262,20 +262,20 @@ class Level:
                             self.fade()
                             self.update_map()
                         #transition to level 2_1
-                        case (1152, 1792):
-                            self.level_index = 3
-                            self.player_pos = (200,5900)
-                            self.floor_surf = pygame.image.load("../graphics/tilemap/level3_ground.png").convert()
-                            floor_width = self.floor_surf.get_width() * 2
-                            floor_height = self.floor_surf.get_height() * 2
-                            self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
-                            self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
-                            if exists("../saves/level_3_collectibles.csv"):
-                                self.collectibles_path = "../saves/level_3_collectibles.csv"
-                            else:
-                                self.collectibles_path = "../map/level_3_collectibles.csv"
-                            self.fade()
-                            self.update_map()
+                        # case (1152, 1792):
+                        #     self.level_index = 3
+                        #     self.player_pos = (200,5900)
+                        #     self.floor_surf = pygame.image.load("../graphics/tilemap/level3_ground.png").convert()
+                        #     floor_width = self.floor_surf.get_width() * 2
+                        #     floor_height = self.floor_surf.get_height() * 2
+                        #     self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                        #     self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+                        #     if exists("../saves/level_3_collectibles.csv"):
+                        #         self.collectibles_path = "../saves/level_3_collectibles.csv"
+                        #     else:
+                        #         self.collectibles_path = "../map/level_3_collectibles.csv"
+                        #     self.fade()
+                        #     self.update_map()
 
                 #level 1_2
                 case 1:
@@ -423,10 +423,10 @@ class Level:
                 #level1_boss_room
                 case 5:
                     match collided_tile_pos:
-                        case (1920, 2304) | (2048, 2304) | (1920, 2304):
+                        case (1920, 2304) | (2048, 2304) | (1792, 2304):
                             self.level_index = 2
-                            self.player_pos = (268,545)
-                            self.player_status = "right"
+                            self.player_pos = (7327,2390)
+                            self.player_status = "left"
                             self.floor_surf = pygame.image.load("../graphics/tilemap/level1_3_ground.png").convert()
                             floor_width = self.floor_surf.get_width() * 2
                             floor_height = self.floor_surf.get_height() * 2
@@ -436,6 +436,21 @@ class Level:
                                 self.collectibles_path = "../saves/level1_3_collectibles.csv"
                             else:
                                 self.collectibles_path = "../map/level1_3_collectibles.csv"
+                            self.fade()
+                            self.update_map()
+                        
+                        case (1920, 0)| (1792, 0)| (1664, 0):
+                            self.level_index = 3
+                            self.player_pos = (200,5900)
+                            self.floor_surf = pygame.image.load("../graphics/tilemap/level3_ground.png").convert()
+                            floor_width = self.floor_surf.get_width() * 2
+                            floor_height = self.floor_surf.get_height() * 2
+                            self.floor_surf = pygame.transform.scale(self.floor_surf,(floor_width, floor_height))
+                            self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
+                            if exists("../saves/level_3_collectibles.csv"):
+                                self.collectibles_path = "../saves/level_3_collectibles.csv"
+                            else:
+                                self.collectibles_path = "../map/level_3_collectibles.csv"
                             self.fade()
                             self.update_map()
 
@@ -486,6 +501,7 @@ class Level:
         self.player_attack_logic()
         self.ui.display(self.player)
         self.shadow_sprites.update()
+        #debug(self.player.rect.topleft,0,0)
 
 #test
 

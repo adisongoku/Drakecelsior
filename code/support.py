@@ -1,6 +1,7 @@
 from csv import reader
 from os import walk #walk lets you to go through file system
 import os, shutil
+from numpy import full
 import pygame
 import re
 from glob import glob
@@ -29,8 +30,11 @@ def import_folder(path):
         for image in sorted(img_files, key=natural_keys):
             full_path = path + '/' + image
             image_surf = pygame.image.load(full_path).convert_alpha()
-            if 'cat_boss' in path:
+            if 'cat_boss' in full_path:
                 image_surf = pygame.transform.scale(image_surf,(image_surf.get_width() * 3,image_surf.get_height() *3))
+            elif "player" in full_path:
+                image_surf = pygame.transform.scale(image_surf,(image_surf.get_width()*3.5,image_surf.get_height()*3.5))
+
             else:
                 image_surf = pygame.transform.scale(image_surf,(TILESIZE,TILESIZE))
             surface_list.append(image_surf)

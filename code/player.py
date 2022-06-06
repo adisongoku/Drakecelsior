@@ -14,7 +14,6 @@ class Player(Entity):
         self.image = pygame.image.load("../graphics/test/drake.png").convert_alpha()
         self.player_height = self.image.get_height()
         self.player_width = self.image.get_width()
-        self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(-20,-60)
         self.transitioning = transitioning
@@ -28,7 +27,7 @@ class Player(Entity):
         #movement
         self.speed = 5
         self.attacking = False
-        self.attack_cooldown = 400
+        self.attack_cooldown = 1000
         self.attack_time = None
 
         self.obstacle_sprites = obstacle_sprites
@@ -162,9 +161,10 @@ class Player(Entity):
         current_time = pygame.time.get_ticks()
 
         if self.attacking:
+            if current_time - self.attack_time >= 500:
+                self.destroy_attack()
             if current_time - self.attack_time >= self.attack_cooldown + weapon_data[self.weapon]['cooldown']:
                 self.attacking = False
-                self.destroy_attack()
             # if self.can_switch_weapon:
                 # if current_time - self.weapon_switch_time >= self.switch_duration_cooldown:
                     # self.can_switch_weapon = True
@@ -173,23 +173,24 @@ class Player(Entity):
                 self.vulnerable = True
 
     def animate(self):
-        if self.status == "right_idle" or self.status == "left_idle" or self.status == "up_idle" or self.status == "down_idle" or self.status == "left" or self.status == "right"or self.status == "up" or self.status == "down":
-            animation = self.animations[self.status]
-            #loop over the frame index
-            self.frame_index += self.animation_speed
-            if self.frame_index >= len(animation):
+        animation = self.animations[self.status]
+        #loop over the frame index
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(animation):
+            if self.attacking:
+                self.frame_index = len(animation) - 1
+            else:
                 self.frame_index = 0
 
-            #set the image
+        #set the image
 
-            self.image = animation[int(self.frame_index)]
-            self.image = pygame.transform.scale(self.image, (self.player_width *3.2, self.player_height*3.2))
-            self.rect = self.image.get_rect(center = self.hitbox.center)
-            if not self.vulnerable:
-                alpha = self.wave_value()
-                self.image.set_alpha(alpha)
-            else:
-                self.image.set_alpha(255)
+        self.image = animation[int(self.frame_index)]
+        self.rect = self.image.get_rect(center = self.hitbox.center)
+        if not self.vulnerable:
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else:
+            self.image.set_alpha(255)
 
     def get_full_weapon_damage(self):
         base_damage = self.stats['attack']
