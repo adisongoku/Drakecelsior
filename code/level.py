@@ -13,6 +13,7 @@ from cat import CAT
 from os.path import exists
 from magic import MagicPlayer
 from particles import AnimationPlayer
+from dialogue_box import DIALOGUE_BOX
 import time
 
 
@@ -160,6 +161,8 @@ class Level:
                                 CAT('cat_boss',(x, y), [self.visible_sprites, self.attackable_sprites], self.obstacles_sprites,self.damage_player)
 
         self.player = Player(self.player_pos,[self.visible_sprites],self.obstacles_sprites, self.create_attack, self.destroy_attack, self.create_magic, self.player_status, self.transitioning)
+        self.dialogue = DIALOGUE_BOX()
+        
 
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
@@ -462,6 +465,7 @@ class Level:
         self.shadow_sprites.update()
         debug(self.player.rect.topleft)
         debug(self.level_index,30,10)
+        self.dialogue.draw_dialogue(DIALOGUE1,"drake")
 
 #test
 
