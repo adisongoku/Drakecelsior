@@ -37,7 +37,7 @@ weapon_data = {
 # enemy 
 monster_data = {
     'orc': {'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius' : 720},
-    'cat_boss': {'health': 500, 'exp': 400, 'damage': 3, 'attack_type': 'slash', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius' : 800}
+    'cat_boss': {'health': 500, 'exp': 400, 'damage': 30, 'attack_type': 'slash', 'speed': 5, 'resistance': 3, 'attack_radius': 80, 'notice_radius' : 800}
 }
 
 # long distance attack

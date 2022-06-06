@@ -18,7 +18,7 @@ class CAT(Enemy):
         self.cutscene_played = False
         self.dialogue = [(CAT_DIAL1,"cat"),(DIALOGUE1,"drake"),(DIALOGUE2,"drake"),(DIALOGUE3,"drake"),(CAT_DIAL2,"cat"),(CAT_DIAL3,"cat"),(DIALOGUE4,"drake"), (CAT_DIAL4,"cat")]
         self.dialogue_index = 0
-        self.dialogue_tick = 50000
+        self.dialogue_tick = 1
         self.can_progress_dialogue = False
 
     def get_status(self, player):
@@ -35,6 +35,11 @@ class CAT(Enemy):
             else:
                 self.status = 'idle'
             player.set_can_move(True)
+    
+    def check_death(self):
+        if self.health <= 0:
+            pygame.mixer.fadeout(5000)
+            self.kill()
 
     def cat_set_intro_status(self, player):
         if self.status == "waiting":
@@ -53,7 +58,7 @@ class CAT(Enemy):
         if self.frame_index < 50:
             self.animation_speed = 0.0666
         else:
-            self.animation_speed = 0.1
+            self.animation_speed = 0.05
         self.frame_index += self.animation_speed
         if self.frame_index >= len(animation):
             if self.status == 'intro':
@@ -96,7 +101,6 @@ class CAT(Enemy):
             if current_time - self.hit_time >= self.invincibility_duration:
                 self.vulnerable = True
         if current_time - self.dialogue_tick >= 500:
-            print(current_time - self.dialogue_tick)
             self.can_progress_dialogue = True 
         else: 
             self.can_progress_dialogue = False
@@ -105,7 +109,7 @@ class CAT(Enemy):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()
             self.damage_player(self.attack_damage, self.attack_type)        
-        elif self.status == 'move':
+        elif self.status == 'move' and self.cutscene_played:
             self.direction = self.get_player_distance_direction(player)[1]
         else:
             self.direction = pygame.math.Vector2()

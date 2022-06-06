@@ -132,7 +132,6 @@ class Enemy(Entity):
     
     def check_death(self):
         if self.health <= 0:
-            pygame.mixer.fadeout(2000)
             self.kill()
 
     def hit_reaction(self):
